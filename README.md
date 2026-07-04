@@ -16,11 +16,6 @@ cd site && python3 -m http.server 8000
 # abra http://localhost:8000
 ```
 
-O deploy é automático via GitHub Actions → **Cloudflare Pages** ([`.github/workflows/deploy-site.yml`](.github/workflows/deploy-site.yml)): todo push na branch `main` que tocar em `site/` publica uma nova versão (também dá para disparar manualmente na aba Actions).
+O deploy é automático via **integração Git do Cloudflare (Workers Builds)**: o repositório está conectado ao projeto `anti-ruido` no Cloudflare, e cada push dispara um build/deploy — o bot `cloudflare-workers-and-pages` comenta o status direto no PR, com link para os logs. A configuração de build (diretório `site/` como assets estáticos) fica no dashboard do Cloudflare em **Workers & Pages → anti-ruido → Settings → Build**. A URL pública aparece no mesmo painel (domínio `*.workers.dev`, com opção de domínio próprio).
 
-Configuração única (uma vez só) — o projeto Pages `anti-ruido` é criado automaticamente no 1º deploy, não precisa criar nada no dashboard:
-
-1. No GitHub, em **Settings → Secrets and variables → Actions**, adicione os mesmos 2 secrets já usados no repo `rpg-de-mesa`:
-   - `CLOUDFLARE_API_TOKEN` — token com permissão *"Cloudflare Pages: Edit"*
-   - `CLOUDFLARE_ACCOUNT_ID` — ID da conta (dashboard → Workers & Pages)
-2. Faça merge/push na `main` (ou rode o workflow manualmente na aba Actions). O site sobe em `https://anti-ruido.pages.dev`.
+*(Um workflow de deploy via GitHub Actions + wrangler existiu aqui, mas foi removido quando a integração Git foi conectada — dois caminhos de deploy para o mesmo projeto só gerariam confusão. Se um dia a integração for desligada, o workflow pode ser recuperado do histórico do git: `git log --diff-filter=D -- .github/workflows/deploy-site.yml`.)*
