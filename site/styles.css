@@ -1,0 +1,298 @@
+/* Anti-Ruído — sistema de design do site
+   Tema escuro assumido: o mundo é o ruído (fundo frio, escuro);
+   a voz escolhida é o único elemento quente (âmbar). */
+
+:root {
+  --bg: #0f1217;
+  --bg-raised: #161b23;
+  --bg-sunken: #0a0d11;
+  --text: #ece7db;
+  --text-muted: #9a948a;
+  --voice: #e8a33d;        /* a voz — único acento quente */
+  --voice-strong: #f5c069;
+  --voice-deep: #8a5a10;
+  --noise: #4a5262;        /* o ruído — cinza-azulado frio */
+  --border: rgba(236, 231, 219, 0.12);
+  --border-strong: rgba(232, 163, 61, 0.45);
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --serif: "Fraunces", Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 1.5rem; }
+.narrow { max-width: 720px; }
+
+a { color: var(--voice-strong); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--voice);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------- Navegação ---------- */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.nav .brand {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  text-decoration: none;
+}
+.nav .brand em { color: var(--voice); font-style: italic; }
+.nav-links {
+  display: flex;
+  gap: 1.4rem;
+  margin-left: auto;
+  align-items: center;
+}
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.92rem;
+}
+.nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--text); }
+.nav-links a[aria-current="page"] { border-bottom: 2px solid var(--voice); padding-bottom: 2px; }
+/* o CTA da nav não herda a cor dos links de navegação (especificidade: .nav-links a venceria .btn) */
+.nav-links a.btn { color: #14100a; }
+.nav-links a.btn:hover { color: #14100a; }
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-block;
+  background: var(--voice);
+  color: #14100a;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  transition: transform 120ms ease, background 120ms ease;
+}
+.btn:hover { background: var(--voice-strong); transform: translateY(-1px); }
+.btn.small { padding: 0.5rem 1.1rem; font-size: 0.9rem; }
+.btn.ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn.ghost:hover { border-color: var(--border-strong); background: var(--bg-raised); }
+.btn-note {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+/* ---------- Hero ---------- */
+.hero { padding: 5rem 0 3.5rem; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--voice);
+  margin: 0 0 1.2rem;
+}
+h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin: 0 0 1.4rem;
+  text-wrap: balance;
+  max-width: 18ch;
+}
+h1 em { font-style: italic; color: var(--voice); }
+.lede {
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  color: var(--text-muted);
+  max-width: 52ch;
+  margin: 0 0 2.2rem;
+  text-wrap: pretty;
+}
+.lede strong { color: var(--text); font-weight: 600; }
+
+#wave { width: 100%; height: 110px; display: block; margin-top: 3rem; }
+@media (prefers-reduced-motion: reduce) { #wave { display: none; } }
+
+/* ---------- Seções ---------- */
+section { padding: 4rem 0; border-top: 1px solid var(--border); }
+h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 1rem;
+  text-wrap: balance;
+}
+h2 em { font-style: italic; color: var(--voice); }
+h3 { font-size: 1.05rem; margin: 0 0 0.5rem; }
+section > .wrap > p, .prose p { max-width: 65ch; }
+.section-intro { color: var(--text-muted); max-width: 58ch; margin-bottom: 2.5rem; }
+
+/* ---------- Métricas do problema ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.stat {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.4rem 1.3rem;
+}
+.stat .num {
+  font-family: var(--serif);
+  font-size: 2.4rem;
+  font-weight: 500;
+  color: var(--voice);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.stat .label { margin-top: 0.6rem; font-size: 0.92rem; color: var(--text-muted); }
+.stat .src { margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted); opacity: 0.75; }
+
+/* ---------- Comparação ---------- */
+.compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.compare .card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.6rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.compare .card .tag {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--noise);
+}
+.compare .card p { margin: 0; font-size: 0.95rem; color: var(--text-muted); }
+.compare .card.ours {
+  border-color: var(--border-strong);
+  background: linear-gradient(180deg, rgba(232, 163, 61, 0.09), var(--bg-raised) 55%);
+}
+.compare .card.ours .tag { color: var(--voice); }
+.compare .card.ours p { color: var(--text); }
+
+/* ---------- Passos (como funciona) ---------- */
+.steps { display: flex; flex-direction: column; gap: 0; margin-top: 2.5rem; }
+.step {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 1.4rem;
+  padding: 1.8rem 0;
+  border-top: 1px solid var(--border);
+}
+.step:first-child { border-top: none; padding-top: 0; }
+.step .n {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 2.2rem;
+  color: var(--voice);
+  line-height: 1;
+}
+.step h3 { font-family: var(--serif); font-weight: 500; font-size: 1.35rem; }
+.step p { margin: 0.4rem 0 0; color: var(--text-muted); max-width: 58ch; }
+.step p strong { color: var(--text); }
+
+/* ---------- Aviso de honestidade / status ---------- */
+.honest {
+  background: var(--bg-sunken);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--voice);
+  border-radius: 8px;
+  padding: 1.3rem 1.5rem;
+  margin-top: 2.5rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  max-width: 62ch;
+}
+.honest strong { color: var(--text); }
+
+/* ---------- FAQ ---------- */
+.faq { margin-top: 2rem; max-width: 720px; }
+.faq details {
+  border-top: 1px solid var(--border);
+  padding: 1rem 0;
+}
+.faq details:last-child { border-bottom: 1px solid var(--border); }
+.faq summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.faq summary::after { content: "+"; color: var(--voice); font-size: 1.3rem; flex-shrink: 0; }
+.faq details[open] summary::after { content: "–"; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq details p { color: var(--text-muted); margin: 0.8rem 0 0; max-width: 60ch; }
+
+/* ---------- Faixa de CTA ---------- */
+.cta-band {
+  background: linear-gradient(180deg, rgba(232, 163, 61, 0.10), rgba(232, 163, 61, 0.03));
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  margin: 4rem 0;
+}
+.cta-band h2 { max-width: 24ch; margin-left: auto; margin-right: auto; }
+.cta-band p { color: var(--text-muted); max-width: 46ch; margin: 0.8rem auto 1.8rem; }
+
+/* ---------- Rodapé ---------- */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 0 3rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+footer .wrap { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; }
+footer a { color: var(--text-muted); }
+
+@media (max-width: 560px) {
+  .hero { padding: 3.2rem 0 2.4rem; }
+  .step { grid-template-columns: 44px 1fr; gap: 1rem; }
+  .nav-links { gap: 1rem; }
+  .nav-links .btn { display: none; } /* CTA da nav some no mobile; as faixas de CTA permanecem */
+}
