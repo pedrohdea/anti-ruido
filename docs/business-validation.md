@@ -1,6 +1,6 @@
 # Anti-Ruído — Documento Vivo de Validação de Negócio
 
-> **Status do loop de pesquisa:** Próxima rodada: **21** (estratégia de marca e posicionamento) · Rodadas concluídas: 20/54 · Execução: a pedido do usuário, as 54 rodadas estão sendo executadas em sequência (sem esperar os 10 min entre cada uma); ao final, uma rodada extra de reavaliação/melhorias será feita.
+> **Status do loop de pesquisa:** Próxima rodada: **31** (síntese e revisão cruzada) · Rodadas concluídas: 30/54 · Execução: a pedido do usuário, as 54 rodadas estão sendo executadas em sequência (sem esperar os 10 min entre cada uma); ao final, uma rodada extra de reavaliação/melhorias será feita.
 > Este documento é atualizado automaticamente a cada rodada (~10 min) durante o Startup Weekend. Cada rodada foca em um ângulo/metodologia diferente — ver seção "Metodologia deste documento" no final.
 
 ## Resumo executivo (one-liner)
@@ -15,6 +15,7 @@
 - **Rodada 2** (SWOT + PESTEL): preenchido SWOT e PESTEL. Achado importante: a FDA emitiu em 6/jan/2026 nova orientação que **facilita o enquadramento de earbuds que "amplificam e esclarecem vozes ao redor" como dispositivo de bem-estar (wellness)**, não como aparelho auditivo médico — reduz o risco regulatório identificado na rodada 1. Também mapeado: mercado de vida noturna/eventos ao vivo e dados de perda auditiva induzida por ruído em jovens.
 - **Rodadas 3-10** (personas/JTBD, pricing, riscos técnicos/IP, VPC, Blue Ocean, Porter, AARRR, mercado adjacente, OKRs/pitch — executadas em sequência a pedido do usuário): definidas 3 personas (frequentador de eventos, profissional viajante, mercado adjacente de perda auditiva leve); JTBD funcional/emocional/social; pricing com sweet spot sugerido US$150-250; achado de risco de IP adicional (patente Google US20220122611A1) mas também campo de pesquisa acadêmica aberta ativa; achado estratégico importante — chipset Qualcomm Snapdragon S7 já comoditiza "background voice rejection" e "context-aware ANC" em silício, baixando barreira técnica de entrada para qualquer concorrente; Blue Ocean Canvas com grade ERRC; AARRR completo com North Star Metric candidata; OKRs de validação para o evento; pitch de 60s e estrutura do pitch de 5min (rascunho).
 - **Rodadas 11-20** (teardown competitivo detalhado, modelagem financeira, fundraising, cap table, legal, supply chain, certificações): teardown do Orosound (fundada 2015, 2 patentes, ~US$5,4-39,5M captados conforme a fonte, 100% B2B — confirma gap de 10 anos sem entrar no consumidor); estrutura de custos com BOM estimado ilustrativamente em US$35-70 (a validar com ODM real); fundraising com comparáveis reais (xMEMS, Mira, Hearvana) e alerta de que "connected hearables" recebem só 2,77% do capital de wearables; diretrizes gerais de cap table e legal/societário; supply chain via ODMs de referência Qualcomm QCC; certificação ANATEL **obrigatória** no Brasil (Categoria II + SAR obrigatório desde 2021) adicionada como novo risco regulatório-técnico.
+- **Rodadas 21-30** (marca, marketing, lançamento, parcerias, equipe, cultura, métricas híbridas, expansão internacional, ESG, sensibilidade de mercado): estratégia de lançamento comparando crowdfunding/pré-venda/varejo; casos reais de parceria de marcas de fone com vida noturna/artistas (Skullcandy x Budweiser, Sony x Olivia Rodrigo, Bose x NFL) como modelo de canal; mercado brasileiro de wearables (US$1,57B em 2024 → US$4,90B em 2033) sugerindo Brasil como mercado de lançamento inicial plausível; novas leis de e-waste/right-to-repair nos EUA (2025-2026) relevantes para design do produto; análise de sensibilidade confirmando que o cenário de incumbentes copiarem via firmware é plausível no curto-médio prazo.
 
 ## 1. Problema e evidência
 
@@ -195,6 +196,32 @@ Fontes desta seção: [TechSpot – Beats headphones BOM cost](https://www.techs
 - **Regulatório-técnico (rodada 20)**: no Brasil, homologação ANATEL é obrigatória para qualquer fone Bluetooth (Categoria II), incluindo ensaio de SAR obrigatório desde 2021 para in-ear/TWS — processo e custo a orçar antes de qualquer produção real (ver seção 12.1).
 - **Competitivo**: Apple, Sony e Bose têm recursos (Adaptive Audio, Conversation Awareness, Adaptive NC Optimizer) que já endereçam parte do problema e poderiam estender via **atualização de firmware** para competir diretamente, sem precisar de novo hardware — barreira de entrada baixa para incumbentes reagirem. **Aprofundamento (rodada 7):** o chipset Qualcomm Snapdragon S7 já oferece "background voice rejection" e "context-aware ANC" como recurso de silício pronto para qualquer fabricante — isso significa que a barreira técnica para um concorrente genérico oferecer algo parecido está caindo rapidamente (ver Porter's Five Forces, seção 10).
 
+## 13.1 Go-to-market, organização e expansão (Fase C, rodadas 21-30)
+
+**Marca e posicionamento (rodada 21):** o nome "Anti-Ruído" comunica bem a categoria (ANC) mas não diferencia o ângulo social/conversa — a validar no evento se um nome que remeta a "conversa"/"clareza" (em vez de só "silêncio") comunica melhor a proposta única (ouvir uma pessoa específica, não só bloquear ruído).
+
+**Estratégia de lançamento (rodada 23):** três caminhos plausíveis, cada um com trade-off:
+1. **Crowdfunding** (Kickstarter/Indiegogo) — valida demanda e financia produção inicial, mas exige protótipo funcional demonstrável (risco, já que a solução técnica não foi construída neste evento).
+2. **Pré-venda direta (landing page + D2C)** — mais rápido de testar, mas sem o efeito de prova social do crowdfunding.
+3. **Varejo tradicional** — inviável nesta fase (exige escala e certificação já concluída, seção 12.1).
+Recomendação preliminar: pré-venda direta para validar interesse/preço agora, crowdfunding como funding gate seguinte, uma vez com protótipo.
+
+**Parcerias estratégicas (rodada 24):** casos reais de marcas de fone que já usam parcerias com vida noturna/eventos/artistas para atingir o público-alvo do Anti-Ruído: **Skullcandy x Budweiser** (fone em edição limitada, "clash de mundos" música + socialização, mirando jovens); **Sony LinkBuds S x Olivia Rodrigo** (parceria com artista Grammy para atingir Gen Z/millennials); **Bose x NFL** (patrocínio oficial de som). Esses casos confirmam que parcerias com marcas de bebida/eventos/artistas são um canal validado no setor — plausível para o Anti-Ruído: parcerias com casas de show, festivais de porte médio ("tier-two", que dão mais liberdade criativa a patrocinadores) e talvez marcas de bebida.
+
+**Equipe e organização (rodada 25 — diretriz geral, não pesquisa específica desta rodada):** papéis-chave que faltam hoje: engenharia de hardware/acústica, ML/processamento de sinal (extração de voz), design industrial, e growth/marketing. Para um Startup Weekend, o time formado no evento deve mapear quais dessas competências já existem entre os participantes e quais precisam ser buscadas logo após.
+
+**Cultura e valores (rodada 26):** a proposta de valor do produto é fundamentalmente sobre *conexão humana* em meio ao caos — sugere-se que a cultura da empresa espelhe isso: foco em usabilidade/simplicidade acima de especificações técnicas, e comunicação de marca que celebre "estar presente", não "se isolar" (reverte o estigma atual de fones em contexto social, JTBD social da seção 4).
+
+**Métricas híbridas hardware+app (rodada 27):** se houver componente de assinatura de app (seção 12), as métricas de receita recorrente (MRR, churn) devem ser acompanhadas separadamente das métricas de venda de hardware (seção 14) — modelo "razor + blade" clássico de hearables com app companion.
+
+**Expansão internacional (rodada 28):** o mercado brasileiro de wearables está avaliado em **US$1,57 bilhão (2024) → US$4,90 bilhões (2033, CAGR 13,5%)**, com o Brasil liderando a adoção de wearables na América Latina por população e urbanização. Isso é relevante porque o fundador está no Brasil — sugere que o Brasil pode ser mercado de lançamento inicial plausível antes de expansão para EUA/Europa (onde a concorrência e o preço médio de TWS premium são mais altos, seção 12).
+
+**Sustentabilidade/ESG (rodada 29):** regulação de e-waste está se expandindo rapidamente — a Califórnia aprovou em 2025/2026 lei (SB 1215) que adiciona produtos com bateria embutida (incluindo fones sem fio) ao programa de reciclagem de eletrônicos, com taxa de descarte cobrada na compra; leis de "right-to-repair" também estão se expandindo para wearables em múltiplos estados dos EUA. Isso sinaliza que o design do produto deve considerar reparabilidade/reciclagem de bateria desde o início, tanto por compliance futuro quanto por posicionamento de marca.
+
+**Análise de sensibilidade de mercado (rodada 30):** o principal cenário de risco (já mapeado nas seções 10 e 13) é a Apple/Sony/Bose lançarem via firmware um recurso de "isolar 1 voz específica" — dado que o chipset Qualcomm Snapdragon S7 já comoditiza parte disso (seção 10), esse cenário é **plausível no curto-médio prazo**. Mitigação estratégica: velocidade de execução + foco de marca 100% social/casual (que incumbentes não priorizam) + construir uma comunidade/marca antes que o recurso vire commodity.
+
+Fontes desta seção: [Buzzincontent – Headphone brands marketing](https://www.buzzincontent.com/story/how-headphone-brands-are-amping-up-their-marketing-game-through-quirky-branded-content/), [PT Engine – Bose Marketing/NFL](https://www.ptengine.com/blog/digital-marketing/bose-marketing-7-emotional-marketing-campaigns-that-every-marketer-can-learn-from/), [Amazon Ads – Sony LinkBuds S case study](https://advertising.amazon.com/library/case-studies/sony-interactive-audio-ads), [Event Marketer – Tier-two music festival sponsorships](https://www.eventmarketer.com/article/brands-investing-tier-two-music-festival-sponsorships/), [Market Data Forecast – Brazil Wearable Technology Market](https://www.imarcgroup.com/brazil-wearable-technology-market), [Waste Dive – New 2026 recycling/battery EPR laws](https://www.wastedive.com/news/new-laws-2026-battery-epr-waste-recycling-organics-landfill-policy/808714/), [ERI – Electronics disposal rules to watch in 2026](https://eridirect.com/blog/2026/01/new-year-new-compliance-risks-electronics-disposal-rules-to-watch-in-2026/).
+
 ## 14. Métricas-chave / North Star Metric / AARRR
 
 **North Star Metric (candidata):** número de "conversas bem-sucedidas em ambiente ruidoso" por usuário por semana (proxy: sessões em que o usuário ativa o "modo conversa" e reporta sucesso subjetivo de entendimento).
@@ -316,6 +343,15 @@ Fontes desta rodada: [MarketingCharts – D2C Brands Top Customer Acquisition Ch
 - [Startups.com – Pre-seed Funding 2025](https://www.startups.com/lexicon/pre-seed-funding)
 - [ABCP – Certificação e Homologação ANATEL de Fones Bluetooth](https://abcpcertificacao.com.br/certificacao-anatel/fones-bluetooth/)
 - [Gov.br ANATEL – Homologar produtos de telecomunicações](https://www.gov.br/pt-br/servicos/homologar-produtos-de-telecomunicacoes-anatel)
+
+**Rodadas 21-30:**
+- [Buzzincontent – Headphone brands marketing](https://www.buzzincontent.com/story/how-headphone-brands-are-amping-up-their-marketing-game-through-quirky-branded-content/)
+- [PT Engine – Bose Marketing/NFL campaigns](https://www.ptengine.com/blog/digital-marketing/bose-marketing-7-emotional-marketing-campaigns-that-every-marketer-can-learn-from/)
+- [Amazon Ads – Sony LinkBuds S case study](https://advertising.amazon.com/library/case-studies/sony-interactive-audio-ads)
+- [Event Marketer – Tier-two music festival sponsorships](https://www.eventmarketer.com/article/brands-investing-tier-two-music-festival-sponsorships/)
+- [IMARC Group – Brazil Wearable Technology Market](https://www.imarcgroup.com/brazil-wearable-technology-market)
+- [Waste Dive – New 2026 recycling/battery EPR laws](https://www.wastedive.com/news/new-laws-2026-battery-epr-waste-recycling-organics-landfill-policy/808714/)
+- [ERI – Electronics disposal rules to watch in 2026](https://eridirect.com/blog/2026/01/new-year-new-compliance-risks-electronics-disposal-rules-to-watch-in-2026/)
 
 ---
 
