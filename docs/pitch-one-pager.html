@@ -113,17 +113,17 @@
 
 <div class="wrap">
   <header class="hero">
-    <span class="eyebrow">Startup Weekend · Documento vivo · Rodada 1 de 54</span>
+    <span class="eyebrow">Startup Weekend · Documento vivo · 54/54 rodadas concluídas</span>
     <h1>Ouça <em>uma</em> voz, mesmo quando tudo ao redor é ruído.</h1>
     <p class="oneliner">Anti-Ruído é um fone B2C que gera ruído branco adaptativo ao ambiente e isola a voz de quem está conversando com você — para funcionar em bares, restaurantes, eventos e transporte público, onde os fones de hoje só cancelam ruído ou reagem à sua própria fala.</p>
     <canvas id="wave" aria-hidden="true"></canvas>
   </header>
 
   <div class="statusbar">
-    <span>Fase atual: <b>A — Fundamentos</b></span>
-    <span>Próxima rodada: <b>2 · SWOT + PESTEL</b></span>
-    <span>Prazo do loop: <b>08:00 BRT</b></span>
-    <span>Fontes citadas: <b>26</b></span>
+    <span>Fases A-E: <b>completas</b></span>
+    <span>Preço-alvo de lançamento: <b>US$199-349</b></span>
+    <span>Mercado inicial: <b>Brasil</b></span>
+    <span>Fontes citadas: <b>60+</b></span>
   </div>
 
   <section>
@@ -136,7 +136,7 @@
       <div class="cell"><h3>Key Metrics</h3><p>Taxa de sucesso de isolamento em teste subjetivo; intenção de compra pré-venda; NPS em uso real.</p></div>
       <div class="cell unfair"><h3>Unfair Advantage</h3><p>Ainda a definir — maior risco aberto do canvas. Candidato: ser o único focado em uso <em>social/casual</em>, gap deixado pela Orosound.</p></div>
       <div class="cell"><h3>Channels</h3><p>Crowdfunding (Kickstarter/Indiegogo), redes sociais, parcerias com casas de evento, D2C.</p></div>
-      <div class="cell"><h3>Revenue Streams</h3><p>Venda de hardware (US$150–300 alvo) + possível assinatura de app para perfis de voz/ambiente.</p></div>
+      <div class="cell"><h3>Revenue Streams</h3><p>Venda de hardware (US$199–349 alvo, ajustado por dados de disposição a pagar) + possível assinatura de app + licenciamento B2B2C do algoritmo (tipo Dolby/DTS).</p></div>
       <div class="cell"><h3>Cost Structure</h3><p>P&amp;D de ML de voz, fabricação ODM/OEM, certificações regulatórias, marketing de lançamento.</p></div>
     </div>
   </section>
@@ -161,18 +161,31 @@
   </section>
 
   <section>
-    <h2>Riscos abertos <span class="tag">rodada 1 · mitigação detalhada na rodada 32</span></h2>
+    <h2>Riscos e mitigação</h2>
     <div class="risk-grid">
-      <div class="risk"><h4>Técnico</h4><p>Extração de voz-alvo em tempo real, baixa energia, dentro de um earbud (hoje só demonstrado em smartphone).</p></div>
-      <div class="risk"><h4>Regulatório</h4><p>FDA oficializou categoria OTC Hearing Aid em 2022 — alegações de "melhorar audição" podem enquadrar o produto como dispositivo médico.</p></div>
-      <div class="risk"><h4>Mercado</h4><p>Doppler Labs e Nuheara mostram histórico de dificuldade comercial em hearables "smart".</p></div>
-      <div class="risk"><h4>Propriedade intelectual</h4><p>Já existe patente registrada (US 10923136) em extração de fala-alvo supervisionada.</p></div>
-      <div class="risk"><h4>Competitivo</h4><p>Apple/Sony/Bose podem estender recursos parecidos via firmware, sem novo hardware.</p></div>
+      <div class="risk"><h4>Técnico</h4><p>Extração de voz-alvo on-device, baixa energia. Mitigação: validar com mentor técnico; construir sobre chipset Qualcomm Snapdragon S7, que já comoditiza parte do processamento.</p></div>
+      <div class="risk"><h4>Regulatório</h4><p>FDA (jan/2026) e ANVISA (fev/2025, caso AirPods Pro 2) já distinguem "wellness" de aparelho auditivo regulado — risco reduzido, desde que o marketing evite alegar "tratar audição".</p></div>
+      <div class="risk"><h4>Mercado</h4><p>Doppler Labs e Nuheara fracassaram por bateria fraca e proposta difusa. Mitigação: validar autonomia e clareza da proposta antes de escalar.</p></div>
+      <div class="risk"><h4>Propriedade intelectual</h4><p>Patentes já existem (US 10923136, Google US20220122611A1). Mitigação: construir sobre pesquisa acadêmica aberta + assessoria jurídica.</p></div>
+      <div class="risk"><h4>Competitivo</h4><p>Apple/Sony/Bose podem copiar via firmware, acelerados pelo chipset comoditizado. Mitigação: velocidade + marca/comunidade no nicho social antes da commoditização.</p></div>
     </div>
   </section>
 
+  <section>
+    <h2>Requisitos para sucesso <span class="tag">consolidado após 54 rodadas</span></h2>
+    <ol style="margin:0; padding-left:1.2rem; font-size:0.92rem; display:flex; flex-direction:column; gap:0.5rem;">
+      <li>Foco inegociável no consumidor casual/social — o único espaço não disputado.</li>
+      <li>Resolver ou terceirizar rápido a incerteza técnica central (extração de voz on-device).</li>
+      <li>Marketing sempre fora do território de "dispositivo médico" (FDA/ANVISA).</li>
+      <li>Validar disposição a pagar com pessoas reais antes de fabricar.</li>
+      <li>Orçar certificação (ANATEL e equivalentes) desde o dia 1.</li>
+      <li>Construir marca/comunidade antes que o recurso vire commodity de firmware.</li>
+      <li>Aprender com os fracassos do setor (bateria, proposta de valor difusa).</li>
+    </ol>
+  </section>
+
   <footer>
-    Documento completo com fontes, SWOT, PESTEL, personas, pricing e mais em <a href="../docs/business-validation.md">docs/business-validation.md</a>. Gerado a partir da pesquisa da Rodada 1 do loop de validação.
+    Documento completo com fontes, SWOT, PESTEL, personas, pricing e mais em <a href="../docs/business-validation.md">docs/business-validation.md</a>. Gerado a partir das 54 rodadas de pesquisa do loop de validação.
   </footer>
 </div>
 
