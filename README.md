@@ -18,11 +18,9 @@ cd site && python3 -m http.server 8000
 
 O deploy é automático via GitHub Actions → **Cloudflare Pages** ([`.github/workflows/deploy-site.yml`](.github/workflows/deploy-site.yml)): todo push na branch `main` que tocar em `site/` publica uma nova versão (também dá para disparar manualmente na aba Actions).
 
-Configuração única (uma vez só):
+Configuração única (uma vez só) — o projeto Pages `anti-ruido` é criado automaticamente no 1º deploy, não precisa criar nada no dashboard:
 
-1. Crie o projeto no Cloudflare: dashboard → **Workers & Pages → Create → Pages → Direct Upload**, com o nome `anti-ruido` (ou `npx wrangler pages project create anti-ruido`).
-2. Crie um API Token em **My Profile → API Tokens** com o template *"Edit Cloudflare Workers"* (ou permissão `Cloudflare Pages — Edit`).
-3. No GitHub, em **Settings → Secrets and variables → Actions**, adicione:
-   - `CLOUDFLARE_API_TOKEN` — o token criado acima
-   - `CLOUDFLARE_ACCOUNT_ID` — visível na sidebar do dashboard do Cloudflare
-4. Faça merge/push na `main`. O site sobe em `https://anti-ruido.pages.dev`.
+1. No GitHub, em **Settings → Secrets and variables → Actions**, adicione os mesmos 2 secrets já usados no repo `rpg-de-mesa`:
+   - `CLOUDFLARE_API_TOKEN` — token com permissão *"Cloudflare Pages: Edit"*
+   - `CLOUDFLARE_ACCOUNT_ID` — ID da conta (dashboard → Workers & Pages)
+2. Faça merge/push na `main` (ou rode o workflow manualmente na aba Actions). O site sobe em `https://anti-ruido.pages.dev`.
