@@ -2,9 +2,6 @@ services:
   anti-ruido:
     build: .
     image: anti-ruido:dev
-    volumes:
-      - ./data:/data
-    # Microfone do host (Linux/ALSA) para o modo live:
     devices:
       - /dev/snd:/dev/snd
     # Sem argumentos roda a demo completa (sintetiza áudio + separa + métricas):

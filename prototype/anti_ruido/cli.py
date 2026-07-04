@@ -10,6 +10,7 @@ Comandos:
 from __future__ import annotations
 
 import argparse
+import logging
 import sys
 from pathlib import Path
 
@@ -17,8 +18,12 @@ from . import __version__
 from .profile import VoiceProfile, describe, extract_profile
 from .separate import separate
 
+logger = logging.getLogger(__name__)
+
 
 def _cmd_profile(args: argparse.Namespace) -> int:
+    logger.info("Running profile command input=%s output=%s", args.input, args.output)
+    logger.debug("profile command args=%s", vars(args))
     prof = extract_profile(args.input)
     prof.save(args.output)
     print(describe(prof))
@@ -27,6 +32,8 @@ def _cmd_profile(args: argparse.Namespace) -> int:
 
 
 def _cmd_separate(args: argparse.Namespace) -> int:
+    logger.info("Running separate command input=%s profile=%s output=%s tolerance=%s gradient=%s denoise=%s",
+                args.input, args.profile, args.output, args.tolerance, args.gradient, args.denoise)
     prof = VoiceProfile.load(args.profile)
     res = separate(
         args.input,
@@ -44,6 +51,8 @@ def _cmd_separate(args: argparse.Namespace) -> int:
 
 
 def _cmd_live(args: argparse.Namespace) -> int:
+    logger.info("Running live command profile=%s output=%s block_seconds=%s tolerance=%s gradient=%s",
+                args.profile, args.output, args.block_seconds, args.tolerance, args.gradient)
     try:
         import sounddevice as sd  # import tardio: só o modo live precisa
     except OSError as e:  # PortAudio ausente
@@ -80,6 +89,7 @@ def _cmd_live(args: argparse.Namespace) -> int:
 
 
 def _cmd_mix(args: argparse.Namespace) -> int:
+    logger.info("Running mix command voice=%s background=%s output=%s snr=%s", args.voice, args.background, args.output, args.snr)
     from .mixer import mix_files
 
     info = mix_files(args.voice, args.background, args.output, snr_db=args.snr)
@@ -88,12 +98,18 @@ def _cmd_mix(args: argparse.Namespace) -> int:
 
 
 def _cmd_demo(args: argparse.Namespace) -> int:
+    logger.info("Running demo command workdir=%s tolerance=%s gradient=%s", args.workdir, args.tolerance, args.gradient)
     from .demo import run_demo
 
     return run_demo(Path(args.workdir), tolerance=args.tolerance, gradient=args.gradient)
 
 
 def main(argv: list[str] | None = None) -> int:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
     p = argparse.ArgumentParser(prog="anti-ruido", description="Protótipo de separação de fala com perfil de voz.")
     p.add_argument("--version", action="version", version=f"anti-ruido {__version__}")
     sub = p.add_subparsers(dest="command", required=True)
@@ -134,6 +150,7 @@ def main(argv: list[str] | None = None) -> int:
     sd_.set_defaults(fn=_cmd_demo)
 
     args = p.parse_args(argv)
+    logger.info("CLI started with argv=%s", argv if argv is not None else sys.argv[1:])
     return args.fn(args)
 
 
