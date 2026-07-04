@@ -1,6 +1,6 @@
 # Anti-Ruído — Documento Vivo de Validação de Negócio
 
-> **Status do loop de pesquisa:** ✅ Rodadas concluídas: **54/54** (todas as fases A-E executadas em sequência, a pedido do usuário). Próximo passo: rodada extra de **reavaliação e busca de melhorias**, feita à parte.
+> **Status do loop de pesquisa:** ✅ Rodadas concluídas: **54/54** + rodada extra de **reavaliação e melhorias** (seção 20). Achado mais recente: a Subtle lançou earbuds de isolamento de voz ("Voicebuds") no CES 2026 a US$199, validando o preço-alvo do Anti-Ruído e aumentando a urgência competitiva.
 > Este documento é atualizado automaticamente a cada rodada (~10 min) durante o Startup Weekend. Cada rodada foca em um ângulo/metodologia diferente — ver seção "Metodologia deste documento" no final.
 
 ## Resumo executivo (one-liner)
@@ -18,6 +18,7 @@
 - **Rodadas 21-30** (marca, marketing, lançamento, parcerias, equipe, cultura, métricas híbridas, expansão internacional, ESG, sensibilidade de mercado): estratégia de lançamento comparando crowdfunding/pré-venda/varejo; casos reais de parceria de marcas de fone com vida noturna/artistas (Skullcandy x Budweiser, Sony x Olivia Rodrigo, Bose x NFL) como modelo de canal; mercado brasileiro de wearables (US$1,57B em 2024 → US$4,90B em 2033) sugerindo Brasil como mercado de lançamento inicial plausível; novas leis de e-waste/right-to-repair nos EUA (2025-2026) relevantes para design do produto; análise de sensibilidade confirmando que o cenário de incumbentes copiarem via firmware é plausível no curto-médio prazo.
 - **Rodadas 31-42** (síntese, mitigação de riscos, refinamento, consolidação): revisão cruzada confirma consistência do documento; plano de mitigação para cada risco da seção 13; ajuste de pricing para cima (US$199-349, dado de WTP real de US$249-449 para ANC premium); modelo alternativo de licenciamento B2B2C (tipo Dolby/DTS); perguntas difíceis de jurados preparadas; roadmap de validação pós-evento detalhado (script de entrevista, landing page, MVP "Mágico de Oz"); consolidado o "Resumo de requisitos para sucesso" (seção 18) com os 7 fatores mais críticos encontrados em toda a pesquisa.
 - **Rodadas 43-54** (polimento final, Fase E): revisado o documento inteiro em busca de referências cruzadas incorretas entre seções (corrigidas); resumo executivo reescrito para refletir o estado final de todas as 54 rodadas; achado final relevante — a **ANVISA confirma a mesma distinção da FDA** (amplificadores/produtos de bem-estar não exigem registro sanitário, só aparelhos auditivos propriamente ditos) e já aprovou o recurso de aparelho auditivo do AirPods Pro 2 no Brasil em fev/2025, reforçando que a janela regulatória favorável vale tanto nos EUA quanto no Brasil; Artifact one-pager atualizado com o estado final da pesquisa.
+- **Rodada de reavaliação** (pós 54 rodadas, seção 20): achado importante — a startup Subtle lançou "Voicebuds" no CES 2026 (US$199, isola a voz do próprio usuário para chamadas/transcrição), validando o preço-alvo do Anti-Ruído em tempo real e aumentando a urgência competitiva, sem contradizer a diferenciação central (isolar a voz de outra pessoa, não a própria); corrigida a duração do pitch (varia 3-5min por edição do evento); discrepância de funding da Orosound investigada novamente e registrada como não resolvida por falta de fonte primária.
 
 ## 1. Problema e evidência
 
@@ -92,6 +93,7 @@ Fontes desta rodada: [Grand View Research – TWS Earbuds Market](https://www.gr
 | **Waverly Labs Pilot** | Tradutor em tempo real | Captação de voz via earbuds | — | Falha documentada em ambientes ruidosos (bares/cafés) — validação de que o problema não está resolvido nem por quem tentou algo adjacente |
 | **Doppler Labs (Here One)** — descontinuado | Smart earbuds "hearables" | Áudio aumentado/personalizável | Levantou US$50M+ | **Caso de fracasso**: vendeu só ~25 mil unidades (esperava 100 mil+), bateria fraca, mercado saturado por AirPods/Galaxy Buds, fechou em 2017 sem conseguir Série C — lição de risco de mercado (ver seção 13) |
 | **Krisp.ai "Voice Isolation"** (software, não hardware) | App/SDK para chamadas | Remove ruído de fundo E outras vozes, mantém só o falante, deep learning local, integra Zoom/Meet/Teams | Assinatura de app | Prova que a tecnologia de "isolar 1 voz entre várias" já funciona bem em laptop/celular — a incógnita é rodar isso em tempo real, baixa latência, num chip pequeno de earbud com bateria limitada |
+| **Subtle "Voicebuds"** (lançado no CES 2026, rodada 55) | Consumer hearable de voz | Array multi-microfone + firmware próprio isola **a voz do próprio usuário** para chamadas/transcrição em ambiente ruidoso; alega 5x menos erros de transcrição que AirPods Pro 3 + modelo da OpenAI | US$199 + assinatura anual de app | Tecnicamente adjacente e **validando o preço-alvo do Anti-Ruído em tempo real** (mesma faixa, US$199), mas resolve o problema inverso — deixar sua própria voz clara para quem ouve à distância/em chamada, não isolar a voz de **outra pessoa** à sua frente. Confirma que o mercado de "wearables focados em voz" está esquentando rápido em 2026 — aumenta a urgência competitiva (ver seção 13.2) |
 
 **Teardown — Orosound (rodada 11):** fundada em 2015 em Paris por Eric Benhaim (especialista em IA/processamento de sinal) e Pierre Guiu (veterano de marcas de áudio da Ásia/Europa). Detém **2 patentes** sobre a tecnologia "TILDE VOICE FIRST" (cancelamento de ruído seletivo e direcional), premiada inclusive pelo Ministério da Pesquisa francês. Captação de recursos relatada varia por fonte — Crunchbase indica ~US$5,42M, PitchBook indica ~US$39,5M para a "Orosound Labs" — **discrepância a esclarecer**, mas em qualquer leitura confirma que é uma empresa de porte pequeno/médio, focada 100% em B2B (escritórios/contact centers), sem sinal de intenção de entrar no consumidor casual. Isso reforça a leitura de "gap" para o Anti-Ruído: a tecnologia mais próxima existe, tem 10 anos de maturação e proteção de patente, mas nunca foi endereçada ao consumidor final. Fontes: [Orosound – About Us](https://www.orosound.com/about-us/), [Crunchbase – Orosound](https://www.crunchbase.com/organization/orosound), [PitchBook – Orosound Labs](https://pitchbook.com/profiles/company/125681-14).
 
@@ -292,7 +294,9 @@ Fontes desta seção: [Intel Market Research – Noise Cancelling Headphones Mar
 
 > "Você já tentou conversar num show, bar ou aeroporto lotado e teve que gritar, ou simplesmente desistiu? Nós somos o Anti-Ruído: um fone que aprende o ruído do ambiente ao seu redor e isola a voz de quem está falando com você, para você ouvir com clareza mesmo no caos. Hoje, Apple, Sony e Bose cancelam ruído — mas nenhum deles deixa você escolher ouvir uma pessoa específica em um ambiente social. A Orosound resolve algo parecido, mas só para escritórios corporativos. Ninguém resolveu isso para quem está numa balada, um show ou um bar. Queremos validar essa ideia com vocês esse fim de semana. Quem aqui já perdeu uma conversa importante porque o lugar estava barulhento demais?"
 
-**Estrutura do pitch de 5min (domingo, alinhado aos 3 critérios de julgamento):**
+**Nota (rodada 55):** a duração do pitch final varia entre 3 e 5 minutos conforme a edição/cidade do Startup Weekend — confirmar o tempo exato com os organizadores locais antes de fixar o roteiro abaixo.
+
+**Estrutura do pitch de 5min (domingo, alinhado aos 3 critérios de julgamento; adaptar para 3min se for o formato do evento local):**
 1. Abertura com o problema + evidência (seção 1) — 45s
 2. Demonstração conceitual do produto (mockup/wireframe, já que a solução técnica não foi construída neste evento) — 60s
 3. Panorama competitivo e diferenciação (Blue Ocean, seção 11) — 60s
@@ -406,6 +410,23 @@ Consolidação (rodada 42) de tudo que a pesquisa das 42 rodadas anteriores indi
 **Rodadas 43-54:**
 - [MacMagazine – Anvisa aprova recurso de Aparelho Auditivo dos AirPods Pro 2 no Brasil](https://macmagazine.com.br/post/2025/02/17/anvisa-aprova-recurso-de-aparelho-auditivo-dos-airpods-pro-2-no-brasil/)
 - [Stone Okamont – Como registrar aparelho auditivo na ANVISA](https://www.stoneokamont.com.br/como-registrar-aparelho-auditivo-na-anvisa)
+
+**Rodada de reavaliação (pós 54 rodadas):**
+- [TechCrunch – Subtle releases Voicebuds](https://techcrunch.com/2026/01/04/subtle-releases-ear-buds-with-its-noise-cancelation-models/)
+- [TechBuzz.ai – Subtle's AI Earbuds Challenge AirPods](https://www.techbuzz.ai/articles/subtle-s-ai-earbuds-challenge-airpods-with-voice-dictation)
+- [Third News – Subtle's Voicebuds at CES 2026](https://third-news.com/article/f0f869e2-e9ca-11f0-af71-9ca3ba0a67df)
+
+---
+
+## 20. Rodada de reavaliação e melhorias (pós 54 rodadas)
+
+Rodada extra pedida pelo usuário para revisar criticamente o documento e buscar melhorias/lacunas depois de concluídas as 54 rodadas originais.
+
+**Achado mais importante:** a startup **Subtle** lançou os **"Voicebuds"** no CES 2026 (jan/2026) — earbuds de consumo com array multi-microfone que isolam a voz **do próprio usuário** para chamadas/transcrição em ambientes ruidosos, ao preço de **US$199** + assinatura de app (adicionado ao panorama competitivo, seção 6). Isso: (1) **valida em tempo real** o preço-alvo de US$199-349 já estimado para o Anti-Ruído a partir de dados de mercado; (2) confirma que o espaço de "wearables focados em voz" está esquentando rapidamente em 2026, com um novo entrante de capital de risco especificamente nesse território; (3) reforça — não contradiz — a diferenciação do Anti-Ruído, já que a Subtle resolve o problema inverso (clarear a própria voz para quem ouve à distância), não isolar a voz de **outra pessoa** à frente do usuário; (4) **aumenta a urgência competitiva**: a distância entre "isolar a própria voz" (já lançado) e "isolar a voz de um terceiro" (o que o Anti-Ruído propõe) é tecnicamente menor do que a distância entre ANC genérico e qualquer um dos dois — um pivô da Subtle nessa direção é plausível.
+
+**Correções de precisão:** (1) a duração do pitch final do Startup Weekend varia entre 3 e 5 minutos conforme a edição/cidade (não há um formato único de "5min oficial" como o documento assumia antes) — corrigido na seção 17; (2) a discrepância de captação da Orosound (US$5,42M via Crunchbase vs. US$39,5M via PitchBook, seção 6) foi pesquisada novamente nesta rodada e **permanece não resolvida** — as duas fontes continuam divergindo sem explicação clara (possível diferença entre "Orosound" e "Orosound Labs" como entidades). Registrado como limitação de dados, não corrigido por falta de fonte primária acessível.
+
+**Avaliação geral do documento:** as referências cruzadas entre seções foram checadas e 5 erros de numeração de seção foram corrigidos (rodadas 43-54). Nenhuma contradição factual adicional foi encontrada entre as 54 rodadas originais. A maior lacuna de evidência que permanece é a validação primária (entrevistas reais com usuários) — nenhuma pesquisa secundária substitui isso, e continua sendo o item mais crítico do roadmap pós-evento (seção 16).
 
 ---
 
