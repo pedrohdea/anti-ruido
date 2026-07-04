@@ -1,6 +1,6 @@
 # Anti-Ruído — Documento Vivo de Validação de Negócio
 
-> **Status do loop de pesquisa:** Próxima rodada: **3** (Personas + Jobs To Be Done) · Rodadas concluídas: 2/54 · Prazo do loop: até 2026-07-04 ~11:00 UTC (08:00 BRT)
+> **Status do loop de pesquisa:** Próxima rodada: **11** (teardown competitivo detalhado) · Rodadas concluídas: 10/54 · Execução: a pedido do usuário, as 54 rodadas estão sendo executadas em sequência (sem esperar os 10 min entre cada uma); ao final, uma rodada extra de reavaliação/melhorias será feita.
 > Este documento é atualizado automaticamente a cada rodada (~10 min) durante o Startup Weekend. Cada rodada foca em um ângulo/metodologia diferente — ver seção "Metodologia deste documento" no final.
 
 ## Resumo executivo (one-liner)
@@ -13,6 +13,7 @@
 
 - **Rodada 1** (Lean Canvas + concorrência direta de hardware): documento criado; Lean Canvas preenchido; panorama competitivo com 8 concorrentes/referências mapeados; estado da arte tecnológico inicial mapeado; README atualizado com o escopo real do produto.
 - **Rodada 2** (SWOT + PESTEL): preenchido SWOT e PESTEL. Achado importante: a FDA emitiu em 6/jan/2026 nova orientação que **facilita o enquadramento de earbuds que "amplificam e esclarecem vozes ao redor" como dispositivo de bem-estar (wellness)**, não como aparelho auditivo médico — reduz o risco regulatório identificado na rodada 1. Também mapeado: mercado de vida noturna/eventos ao vivo e dados de perda auditiva induzida por ruído em jovens.
+- **Rodadas 3-10** (personas/JTBD, pricing, riscos técnicos/IP, VPC, Blue Ocean, Porter, AARRR, mercado adjacente, OKRs/pitch — executadas em sequência a pedido do usuário): definidas 3 personas (frequentador de eventos, profissional viajante, mercado adjacente de perda auditiva leve); JTBD funcional/emocional/social; pricing com sweet spot sugerido US$150-250; achado de risco de IP adicional (patente Google US20220122611A1) mas também campo de pesquisa acadêmica aberta ativa; achado estratégico importante — chipset Qualcomm Snapdragon S7 já comoditiza "background voice rejection" e "context-aware ANC" em silício, baixando barreira técnica de entrada para qualquer concorrente; Blue Ocean Canvas com grade ERRC; AARRR completo com North Star Metric candidata; OKRs de validação para o evento; pitch de 60s e estrutura do pitch de 5min (rascunho).
 
 ## 1. Problema e evidência
 
@@ -50,15 +51,29 @@ Formato oficial usado no Startup Weekend / Techstars Entrepreneur's Toolkit (Ash
 
 ## 3. Value Proposition Canvas
 
-*Pendente — Rodada 6.*
+| Perfil do cliente | Proposta de valor |
+|---|---|
+| **Dores:** gritar/repetir em ambientes barulhentos; cansaço social; sensação de exclusão da conversa; ANC atual cancela ruído mas não resolve isso; estigma de parecer "antissocial" usando fone em grupo | **Aliviadores de dor:** extração seletiva da voz de uma pessoa-alvo + ruído branco adaptado ao ambiente elimina a necessidade de gritar/repetir; ativação simples ("modo conversa") reduz fricção |
+| **Ganhos desejados:** conversar com clareza sem esforço; sentir-se presente socialmente; ser percebido como preparado/tecnológico | **Criadores de ganho:** modo social dedicado com ativação rápida (ex. toque duplo/gesto), app simples para calibrar perfil de voz/ambiente |
+| **Jobs:** funcional (entender/ser entendido), emocional (sentir-se conectado), social (não parecer isolado) — ver seção 4 | **Produtos/serviços:** fone com ANC + microfones direcionais + extração seletiva de voz + app companion *(conceito, não construído neste evento)* |
 
 ## 4. Jobs To Be Done
 
-*Pendente — Rodada 3.*
+- **Funcional:** "Quando estou num ambiente muito barulhento, quero entender e ser entendido por uma pessoa específica, para não precisar gritar ou repetir."
+- **Emocional:** "Quero me sentir presente/conectado socialmente mesmo em ambientes caóticos, sem a frustração e o constrangimento de pedir para repetir várias vezes."
+- **Social:** "Quero parecer preparado e tecnológico usando o fone em público, não 'antissocial' — hoje há estigma de usar fone em contexto social; o produto precisa reverter isso (é uma ferramenta *para* conversar, não para se isolar)."
 
 ## 5. Personas e segmentação
 
-*Pendente — Rodada 3.*
+| Persona | Perfil | Evidência |
+|---|---|---|
+| **Frequentador de eventos/shows (early adopter primário)** | Gen Z/Millennial urbano, prioriza "economia da experiência", já gasta em áudio premium | Gen Z gastou US$2.100+ em música ao vivo em 2 anos; mercado de música ao vivo nos EUA crescendo 6,45% a.a. (rodada 2) |
+| **Profissional urbano/viajante** | Compra TWS premium (>US$200), valoriza produtividade e clareza em viagens, aeroportos, transporte | Segmento >US$200 nos EUA já vale US$15,42B (37,8% share), crescendo 30,9% CAGR — maior sinal de disposição a pagar por áudio premium |
+| **Mercado adjacente: perda auditiva leve não diagnosticada** | Adultos que evitam ambientes ruidosos silenciosamente, sem se identificar como "usuário de aparelho auditivo" | Nos EUA, ~28,8 milhões de adultos se beneficiariam de aparelho auditivo, mas só 16% dos que precisam (20-69 anos) realmente usam um; ~25,4 milhões de pessoas com 12+ anos têm perda auditiva leve (NIDCD) — grande público subatendido, mas requer cuidado regulatório (ver seção 13) |
+
+Fontes desta rodada: [Grand View Research – TWS Earbuds Market](https://www.grandviewresearch.com/industry-analysis/true-wireless-stereo-earbuds-market-report), [Grand View Research – OTC Hearing Aids Market](https://www.grandviewresearch.com/industry-analysis/over-the-counter-hearing-aids-market-report), [The Hearing Review – OTC Hearing Aid Market to Hit $1.16B by 2030](https://hearingreview.com/hearing-products/hearing-aids/otc/otc-hearing-aid-market-to-hit-1-16-billion-by-2030).
+
+**Dimensionamento macro do mercado adjacente (rodada 9, sem virar foco do produto):** globalmente, a OMS estima que **1,5 bilhão de pessoas** vivem com algum grau de perda auditiva, projeção de **2,5 bilhões até 2050**. O mercado de aparelhos auditivos vale US$9,27B (2025) → US$15,11B (2033, CAGR 6,3%); o nicho específico de OTC (sem receita médica) vale US$437,4M (2025) → US$884,1M (2034, CAGR 8,1%). Esses números mostram um mercado adjacente grande e crescente, mas hoje **dimensionado como categoria médica/assistiva**, não como "conveniência social" — reforça que o Anti-Ruído deve se manter posicionado como produto de consumo/conveniência (ver seção 13, risco regulatório) mesmo que parte da demanda futura venha de pessoas com perda auditiva leve não diagnosticada. Fontes: [SkyQuest – Hearing Aid Market](https://www.skyquestt.com/report/hearing-aid-market), [Fortune Business Insights – Hearing Aids Market](https://www.fortunebusinessinsights.com/industry-reports/hearing-aids-market-101573), [GM Insights – OTC Hearing Aids Market](https://www.gminsights.com/industry-analysis/otc-hearing-aids-market).
 
 ## 6. Panorama competitivo
 
@@ -116,17 +131,39 @@ Fontes desta rodada: [IEEE Spectrum – FDA 2026 Update for Wearables](https://s
 
 ## 10. Porter's Five Forces
 
-*Pendente — Rodada 7.*
+- **Rivalidade entre concorrentes:** alta — Apple, Sony e Bose dominam com marca, escala e distribuição; Orosound ocupa o nicho tecnicamente mais próximo mas só em B2B.
+- **Ameaça de novos entrantes:** moderada-alta. Achado importante desta rodada: os fornecedores de chipset de áudio já estão comoditizando parte da tecnologia-chave — o **Qualcomm Snapdragon S7** (chip de áudio) já inclui NPU dedicado e oferece recursos de IA como **"background voice rejection" e "context-aware ANC"** como funcionalidade de silício pronta para qualquer fabricante licenciar. Isso baixa a barreira de entrada para concorrentes genéricos, mas também significa que o Anti-Ruído poderia **construir sobre esse chipset em vez de desenvolver o algoritmo do zero** — acelerando o roadmap técnico, ao custo de menor diferenciação defensável (ver "Unfair Advantage", seção 2).
+- **Poder de barganha dos fornecedores:** moderado — chipsets Bluetooth/ANC têm múltiplos fornecedores (Qualcomm QCC/Snapdragon, Airoha, Bestechnic/BES, Jieli) e ODMs consolidados (ex. KiSB para Qualcomm QCC), reduzindo dependência de um único fornecedor, mas os chips com NPU dedicado para IA (Snapdragon S7) ainda são um diferencial mais restrito.
+- **Poder de barganha dos compradores:** alto — baixo custo de troca entre marcas de fone, muitas alternativas disponíveis.
+- **Ameaça de produtos substitutos:** alta — apps de isolamento de voz em smartphone (Krisp, mas não em tempo real "ao vivo" fisicamente), aproximar-se fisicamente, gritar, leitura labial (todos substitutos "gratuitos" existentes).
+
+Fontes desta rodada: [Sonun – Most Common Headphone Chips](https://www.sonun.com/most-common-headphone-chips/), [Qualcomm – QCC30xx Series Bluetooth Audio SoCs](https://www.qualcomm.com/products/internet-of-things/consumer/audio/qcc30xx-series), [SoundGuys – Qualcomm Snapdragon S7 audio chip](https://www.soundguys.com/qualcomm-xpan-wifi-earbuds-102360/).
 
 ## 11. Blue Ocean Strategy Canvas
 
-*Pendente — Rodada 6.*
+**Eixos da curva de valor:** preço, marca/confiança, isolamento seletivo de voz-alvo, foco social/casual (vs. profissional), simplicidade de ativação.
+
+- **Apple/Sony/Bose:** altos em preço e marca, médios em ANC genérico, **baixos** em isolamento seletivo de voz de terceiros.
+- **Orosound:** **alto** em isolamento seletivo de voz, mas **baixo** em foco casual/social (100% B2B) — não compete pela atenção do consumidor comum.
+- **Anti-Ruído (proposta):** cria uma curva nova, alta em isolamento seletivo de voz-alvo *e* em foco social/casual, preço médio-alto (não ultra-premium), simplicidade de ativação como diferencial central.
+
+**Grade ERRC (Eliminate-Reduce-Raise-Create):**
+- **Eliminar:** recursos corporativos/de frota da Orosound (gestão centralizada, integração com softwares de call center) — irrelevantes para o consumidor casual.
+- **Reduzir:** preço frente ao ultra-premium (Bose/Sony ~US$400+).
+- **Elevar:** isolamento seletivo de voz-alvo para uso social casual; simplicidade de ativação ("modo conversa" em 1 gesto).
+- **Criar:** categoria de "fone social" pensado explicitamente para bares/eventos/shows, não para escritório nem genericamente para "todo dia".
 
 ## 12. Modelo de receita e pricing
 
-*Pendente — Rodada 4 (aprofundado na rodada 37).*
+Referências de preço (rodada 1): AirPods Pro ~US$250; Bose QC Ultra ~US$430; Sony XM6 ~US$400+; Jabra Enhance (hearing aid OTC) US$995-1995; faixa sub-US$50 é o segmento de ANC que mais cresce (~21%+ CAGR) — sinaliza pressão de comoditização de preço na entrada.
 
-Referências de preço já coletadas (rodada 1): AirPods Pro ~US$250; Bose QC Ultra ~US$430; Sony XM6 ~US$400+; Jabra Enhance (hearing aid OTC) US$995-1995; faixa sub-US$50 é o segmento de ANC que mais cresce (~21%+ CAGR) — sinaliza pressão de comoditização de preço na entrada.
+**Segmentação de preço no mercado de TWS (rodada 4):** o segmento US$51-100 é hoje o maior por volume; o segmento US$100-199 já responde por 51,3% do valor de mercado (crescendo 31,7% a.a.); o segmento premium >US$200 nos EUA vale US$15,42B (37,8% share) e cresce **30,9% a.a.** — o crescimento mais rápido está no premium, não no genérico. Isso sugere um "sweet spot" de lançamento em torno de **US$150-250**: acima do genérico (evita comoditização), mas abaixo do super-premium (Bose/Sony ~US$400+), competindo diretamente com o preço do AirPods Pro.
+
+**Benchmarks de crowdfunding (rodada 4):** earbuds com diferencial de IA/tradução conseguem tração em crowdfunding nessa faixa — Timekettle WT2 Plus (tradução offline) US$239,99; Morph InfiniConnect atingiu 1600% da meta; Buddie (assistente IA open-source) usa "preço de custo" para adoção inicial. Sinal de que uma proposta de valor clara e diferenciada consegue validar disposição a pagar via pré-venda, sem depender de varejo tradicional.
+
+*Modelagem financeira detalhada (projeção 3-5 anos, cenários) — Rodada 14. Willingness-to-pay aprofundada — Rodada 37.*
+
+Fontes desta rodada: [Grand View Research – TWS Earbuds Market Report](https://www.grandviewresearch.com/industry-analysis/true-wireless-stereo-earbuds-market-report), [Kickstarter – Buddie AI Earbuds](https://www.kickstarter.com/projects/buddieai/buddie-the-discrete-ai-earbuds-assistant), [Liliputing – TDM Neo hybrid headphones Kickstarter](https://liliputing.com/tdm-neo-hybrid-headphones-and-speaker-launch-on-kickstarter-for-189-and-up/).
 
 ## 13. Riscos
 
@@ -135,16 +172,33 @@ Referências de preço já coletadas (rodada 1): AirPods Pro ~US$250; Bose QC Ul
 - **Técnico**: extrair voz-alvo em tempo real com baixa latência e baixo consumo de energia num chip de earbud (não num laptop) é território de pesquisa, não tecnologia "de prateleira" pronta — maior incerteza técnica do projeto.
 - **Regulatório**: a FDA oficializou em 2022 a categoria de **OTC Hearing Aids** (Bose, Jabra e o recurso "Hearing Aid" do AirPods Pro 2 já certificados). Qualquer alegação de "melhorar audição" (não só cancelar ruído) pode enquadrar o produto como dispositivo médico regulado, com exigências técnicas (ex.: limite de 111 dB SPL) e de rotulagem. Fonte: [FDA – OTC Hearing Aids](https://www.fda.gov/medical-devices/hearing-aids/otc-hearing-aids-what-you-should-know), [Federal Register 2022](https://www.federalregister.gov/documents/2022/08/17/2022-17230/medical-devices-ear-nose-and-throat-devices-establishing-over-the-counter-hearing-aids). **Atualização (rodada 2, jan/2026):** a FDA publicou nova diretriz que trata earbuds que "amplificam e esclarecem vozes ao redor" como dispositivo de bem-estar (wellness), não aparelho auditivo regulado — **reduz esse risco**, desde que o marketing evite alegações de "tratar perda auditiva". Fonte: [IEEE Spectrum](https://spectrum.ieee.org/fda-medical-device-rules), [STAT News](https://www.statnews.com/2026/01/06/fda-pulls-back-oversight-ai-enabled-devices-wearables/). Ainda pendente: equivalente da ANVISA no Brasil.
 - **Mercado**: dois precedentes diretos de fracasso comercial em hearables "inteligentes" — **Doppler Labs** (levantou US$50M+, fechou em 2017) e **Nuheara** (liquidação em 2023). Ambos mostram que hardware de áudio "smart" tem histórico de dificuldade de tração e unit economics.
-- **Propriedade intelectual**: já existe pelo menos uma patente registrada (US 10923136) em técnica de extração de fala-alvo supervisionada — o espaço de IP não está vazio; aprofundar busca de patentes na rodada 5.
-- **Competitivo**: Apple, Sony e Bose têm recursos (Adaptive Audio, Conversation Awareness, Adaptive NC Optimizer) que já endereçam parte do problema e poderiam estender via **atualização de firmware** para competir diretamente, sem precisar de novo hardware — barreira de entrada baixa para incumbentes reagirem (aprofundar na rodada 7 e 30).
+- **Propriedade intelectual**: já existe pelo menos uma patente registrada (US 10923136) em técnica de extração de fala-alvo supervisionada — o espaço de IP não está vazio. **Aprofundamento (rodada 5):** há também a patente **US20220122611A1** (Google) — "Targeted voice separation by speaker conditioned on spectrogram masking" — confirmando que players grandes (Google) já depositaram IP nessa área específica. Ao mesmo tempo, a pesquisa acadêmica em *target speaker extraction* está muito ativa em 2025 (técnicas como USEF-TSE sem necessidade de embedding de locutor, uso de encoders self-supervised como WavLM/wav2vec 2.0, modelos de difusão) — **o campo é ao mesmo tempo bem patenteado por incumbentes E muito pesquisado abertamente**, o que sugere que construir sobre pesquisa acadêmica aberta (ex. papers arXiv, não as patentes) é o caminho mais seguro para evitar violação de IP, mas exige assessoria jurídica de patentes antes de qualquer desenvolvimento real.
+- **Competitivo**: Apple, Sony e Bose têm recursos (Adaptive Audio, Conversation Awareness, Adaptive NC Optimizer) que já endereçam parte do problema e poderiam estender via **atualização de firmware** para competir diretamente, sem precisar de novo hardware — barreira de entrada baixa para incumbentes reagirem. **Aprofundamento (rodada 7):** o chipset Qualcomm Snapdragon S7 já oferece "background voice rejection" e "context-aware ANC" como recurso de silício pronto para qualquer fabricante — isso significa que a barreira técnica para um concorrente genérico oferecer algo parecido está caindo rapidamente (ver Porter's Five Forces, seção 10).
 
 ## 14. Métricas-chave / North Star Metric / AARRR
 
-*Pendente — Rodada 8.*
+**North Star Metric (candidata):** número de "conversas bem-sucedidas em ambiente ruidoso" por usuário por semana (proxy: sessões em que o usuário ativa o "modo conversa" e reporta sucesso subjetivo de entendimento).
+
+- **Acquisition:** crowdfunding (ver seção 12) + micro-influenciadores (10-100 mil seguidores têm engajamento de 3-8% vs. 1-2% de mega-influenciadores, e CPM 60-80% menor) + parcerias com casas de show/eventos.
+- **Activation:** primeiro "momento aha" = conseguir isolar a voz de 1 pessoa com sucesso perceptível em ambiente ruidoso real, dentro de segundos de configuração inicial.
+- **Retention:** uso recorrente associado a hábitos sociais (sair para bares/eventos/viagens) — testar se vira parte do "kit de saída" do usuário.
+- **Revenue:** venda de hardware (seção 12) + possível assinatura de app para perfis de voz/ambiente personalizados.
+- **Referral:** o próprio produto tem gatilho social embutido — demonstrar "experimenta isso" a um amigo em ambiente ruidoso é um momento natural de indicação.
+
+**Nota sobre CAC:** custos de aquisição em D2C subiram 60-80% desde 2021 (mudanças de privacidade do iOS, saturação de plataformas); a meta saudável de LTV:CAC é de pelo menos 3:1 (marcas D2C premium alcançam 4-6:1) — referência para o roadmap de validação pós-evento (seção 16).
+
+Fontes desta rodada: [MarketingCharts – D2C Brands Top Customer Acquisition Channels](https://www.marketingcharts.com/charts/d2c-brands-top-customer-acquisition-channels), [Storyboard18 – D2C influencer marketing budgets](https://www.storyboard18.com/brand-marketing/54-of-d2c-brands-spend-up-to-25-of-marketing-budgets-on-influencers-85597.htm).
 
 ## 15. OKRs de validação
 
-*Pendente — Rodada 10.*
+**Objetivo 1 — Validar que o problema é real e que as pessoas pagariam por uma solução**
+- KR1: Coletar N manifestações de interesse/pré-cadastro (landing page ou lista) durante o evento.
+- KR2: Confirmar disposição a pagar em conversas informais com pelo menos 15-20 pessoas no perfil de persona (seção 5) durante o Startup Weekend.
+- KR3: Obter validação qualitativa de pelo menos 1 mentor/especialista técnico do evento sobre a viabilidade da extração de voz em restrição de energia/DSP de um earbud.
+
+**Objetivo 2 — Confirmar diferenciação real vs. concorrência**
+- KR1: Mapear e confirmar (feito nas rodadas 1, 6 e 11) que nenhum concorrente direto atende ao caso de uso "escolher 1 voz específica em ambiente social casual".
+- KR2: Testar a reação de pelo menos 10 pessoas ao pitch de 60s (abaixo) e registrar objeções recorrentes.
 
 ## 16. Roadmap de validação pós-evento
 
@@ -152,7 +206,19 @@ Referências de preço já coletadas (rodada 1): AirPods Pro ~US$250; Bose QC Ul
 
 ## 17. Pitch de 60s e pitch de 5min
 
-*Pendente — Rodada 10 (refinado na rodada 42/54).*
+**Pitch de 60s (versão rascunho, rodada 10 — sem slides, formato oficial de sexta-feira):**
+
+> "Você já tentou conversar num show, bar ou aeroporto lotado e teve que gritar, ou simplesmente desistiu? Nós somos o Anti-Ruído: um fone que aprende o ruído do ambiente ao seu redor e isola a voz de quem está falando com você, para você ouvir com clareza mesmo no caos. Hoje, Apple, Sony e Bose cancelam ruído — mas nenhum deles deixa você escolher ouvir uma pessoa específica em um ambiente social. A Orosound resolve algo parecido, mas só para escritórios corporativos. Ninguém resolveu isso para quem está numa balada, um show ou um bar. Queremos validar essa ideia com vocês esse fim de semana. Quem aqui já perdeu uma conversa importante porque o lugar estava barulhento demais?"
+
+**Estrutura do pitch de 5min (domingo, alinhado aos 3 critérios de julgamento):**
+1. Abertura com o problema + evidência (seção 1) — 45s
+2. Demonstração conceitual do produto (mockup/wireframe, já que a solução técnica não foi construída neste evento) — 60s
+3. Panorama competitivo e diferenciação (Blue Ocean, seção 11) — 60s
+4. Modelo de negócio (Lean Canvas + pricing, seções 2 e 12) — 45s
+5. Evidência de validação coletada no evento (OKRs, seção 15) — 45s
+6. Pedido/próximos passos (roadmap, seção 16) — 15s
+
+*(Refinado nas rodadas 42 e 54, após mais evidência coletada.)*
 
 ## 18. Resumo de requisitos para sucesso
 
@@ -201,6 +267,23 @@ Referências de preço já coletadas (rodada 1): AirPods Pro ~US$250; Bose QC Ul
 - [ConsumerAffairs – FDA relaxes rules for wearable health devices](https://www.consumeraffairs.com/news/fda-relaxes-rules-for-wearable-health-devices-010726.html)
 - [STAT News – FDA pulls back oversight of AI-enabled devices/wearables](https://www.statnews.com/2026/01/06/fda-pulls-back-oversight-ai-enabled-devices-wearables/)
 - [Mordor Intelligence – Hearables Market 2026-2031](https://www.mordorintelligence.com/industry-reports/hearables-market)
+
+**Rodadas 3-10:**
+- [Grand View Research – TWS Earbuds Market Report](https://www.grandviewresearch.com/industry-analysis/true-wireless-stereo-earbuds-market-report)
+- [Grand View Research – OTC Hearing Aids Market Report](https://www.grandviewresearch.com/industry-analysis/over-the-counter-hearing-aids-market-report)
+- [The Hearing Review – OTC Hearing Aid Market to Hit $1.16B by 2030](https://hearingreview.com/hearing-products/hearing-aids/otc/otc-hearing-aid-market-to-hit-1-16-billion-by-2030)
+- [SkyQuest – Hearing Aid Market](https://www.skyquestt.com/report/hearing-aid-market)
+- [Fortune Business Insights – Hearing Aids Market](https://www.fortunebusinessinsights.com/industry-reports/hearing-aids-market-101573)
+- [GM Insights – OTC Hearing Aids Market](https://www.gminsights.com/industry-analysis/otc-hearing-aids-market)
+- [Kickstarter – Buddie AI Earbuds Assistant](https://www.kickstarter.com/projects/buddieai/buddie-the-discrete-ai-earbuds-assistant)
+- [Liliputing – TDM Neo hybrid headphones Kickstarter](https://liliputing.com/tdm-neo-hybrid-headphones-and-speaker-launch-on-kickstarter-for-189-and-up/)
+- [Emergent Mind – Target Speaker Extraction Overview](https://www.emergentmind.com/topics/target-speaker-extraction-tse)
+- [Google Patents – US20220122611A1 Targeted voice separation](https://patents.google.com/patent/US20220122611A1/en)
+- [Sonun – Most Common Headphone Chips](https://www.sonun.com/most-common-headphone-chips/)
+- [Qualcomm – QCC30xx Series Bluetooth Audio SoCs](https://www.qualcomm.com/products/internet-of-things/consumer/audio/qcc30xx-series)
+- [SoundGuys – Qualcomm Snapdragon S7 audio chip](https://www.soundguys.com/qualcomm-xpan-wifi-earbuds-102360/)
+- [MarketingCharts – D2C Brands Top Customer Acquisition Channels](https://www.marketingcharts.com/charts/d2c-brands-top-customer-acquisition-channels)
+- [Storyboard18 – D2C influencer marketing budgets](https://www.storyboard18.com/brand-marketing/54-of-d2c-brands-spend-up-to-25-of-marketing-budgets-on-influencers-85597.htm)
 
 ---
 
