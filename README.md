@@ -6,6 +6,7 @@ Projeto em desenvolvimento no Startup Weekend. Este repositório está, por enqu
 
 - Documento vivo de validação (metodologias de startup, Lean Canvas, concorrência, SWOT, mercado, riscos etc.): [`docs/business-validation.md`](docs/business-validation.md)
 - Site estático de divulgação e captação de interesse: [`site/`](site/) (landing page + explicação do produto + formulário de interesse)
+- Protótipo de separação de fala com perfil de voz (timbre/pitch/intensidade) e ajustes de gradiente/tolerância: [`prototype/`](prototype/) — liga com um comando via Docker (`cd prototype && docker compose run --rm anti-ruido`)
 
 ## Site — desenvolvimento e publicação
 
