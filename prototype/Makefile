@@ -7,7 +7,7 @@
 VENV := .venv
 PY   := $(VENV)/bin/python
 
-.PHONY: all run setup demo clean
+.PHONY: all run setup demo test clean
 
 all: setup run
 
@@ -23,6 +23,9 @@ run:
 
 demo: setup
 	$(PY) -m anti_ruido.cli demo
+
+test: setup
+	$(PY) -m unittest discover -s tests -t . -v
 
 clean:
 	rm -rf $(VENV) app/data demo-out
