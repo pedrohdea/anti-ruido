@@ -97,6 +97,16 @@ def _cmd_mix(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_analyze(args: argparse.Namespace) -> int:
+    from .analyze import analyze_timeline, save_timeline
+
+    prof = VoiceProfile.load(args.profile)
+    data = analyze_timeline(args.input, prof, tolerance=args.tolerance, gradient=args.gradient)
+    save_timeline(data, args.output)
+    print(f"OK: {args.output} ({len(data['points'])} pontos, {data['duration_s']}s)")
+    return 0
+
+
 def _cmd_demo(args: argparse.Namespace) -> int:
     logger.info("Running demo command workdir=%s tolerance=%s gradient=%s", args.workdir, args.tolerance, args.gradient)
     from .demo import run_demo
@@ -135,6 +145,14 @@ def main(argv: list[str] | None = None) -> int:
     sl.add_argument("-g", "--gradient", type=float, default=0.85)
     sl.add_argument("--block-seconds", type=float, default=1.0)
     sl.set_defaults(fn=_cmd_live)
+
+    sa = sub.add_parser("analyze", help="exporta linha do tempo de características (JSON p/ visualizador)")
+    sa.add_argument("input", help="WAV/MP3 a analisar")
+    sa.add_argument("-p", "--profile", required=True)
+    sa.add_argument("-o", "--output", default="timeline.json")
+    sa.add_argument("-t", "--tolerance", type=float, default=0.5)
+    sa.add_argument("-g", "--gradient", type=float, default=0.85)
+    sa.set_defaults(fn=_cmd_analyze)
 
     sm = sub.add_parser("mix", help="mescla voz + fundo num WAV de teste com SNR controlado")
     sm.add_argument("voice", help="WAV com a fala a preservar")

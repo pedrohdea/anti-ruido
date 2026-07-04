@@ -69,10 +69,18 @@ def _dbfs(x: float) -> float:
     return float(20.0 * np.log10(max(x, 1e-10)))
 
 
+MAX_PROFILE_SECONDS = 10.0  # amostra de perfil é SEMPRE cortada em 10s
+
+
 def extract_profile(wav_path: str | Path, sr: int | None = 22050) -> VoiceProfile:
-    """Extrai o perfil de voz de um arquivo WAV/FLAC/OGG com fala da pessoa."""
+    """Extrai o perfil de voz de um arquivo WAV/MP3/FLAC/OGG com fala da pessoa.
+
+    A amostra é limitada a MAX_PROFILE_SECONDS (10s) — o que passar disso é
+    descartado, tanto para manter o perfil consistente quanto para a análise
+    ser rápida.
+    """
     logger.info("Loading audio file %s with target sr=%s", wav_path, sr)
-    y, sr = librosa.load(str(wav_path), sr=sr, mono=True)
+    y, sr = librosa.load(str(wav_path), sr=sr, mono=True, duration=MAX_PROFILE_SECONDS)
     logger.info("Loaded audio: samples=%s sr=%s duration=%.2fs", len(y), sr, len(y) / sr)
     if len(y) < N_FFT * 4:
         logger.error("Audio too short: %s samples", len(y))

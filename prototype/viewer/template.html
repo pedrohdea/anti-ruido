@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Anti-Ruído — Análise em tempo real</title>
+<style>
+  :root{
+    --bg:#101318; --surface:#1a1a19; --surface-2:#22221f;
+    --text:#ece7db; --text-muted:#9a948a; --border:rgba(236,231,219,0.12);
+    --voz:#c98500; --ganho:#199e70; --nivel:#3987e5;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style",serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);padding:1.2rem;line-height:1.45}
+  .wrap{max-width:1080px;margin:0 auto}
+  h1{font-family:var(--serif);font-weight:500;font-size:1.6rem;margin:0}
+  h1 em{color:var(--voz);font-style:italic}
+  .sub{color:var(--text-muted);font-size:.9rem;margin:.3rem 0 1.2rem;max-width:70ch}
+  .controls{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem;margin-bottom:1rem}
+  button{font:inherit;cursor:pointer}
+  .play{background:var(--voz);border:none;color:#14100a;font-weight:700;border-radius:999px;padding:.55rem 1.4rem;font-size:1rem}
+  .play:hover{filter:brightness(1.1)}
+  .seg{display:flex;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+  .seg button{background:transparent;border:none;color:var(--text-muted);padding:.5rem 1rem;font-size:.88rem}
+  .seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--text);font-weight:600}
+  .time{font-family:var(--mono);font-size:.95rem;color:var(--text-muted);font-variant-numeric:tabular-nums;margin-left:auto}
+  button:focus-visible{outline:2px solid var(--voz);outline-offset:2px}
+
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem;margin-bottom:1rem}
+  .tile{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding: .8rem .9rem}
+  .tile .lbl{font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);display:flex;align-items:center;gap:.45rem}
+  .tile .lbl .chip{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+  .tile .val{font-size:1.55rem;font-weight:650;font-variant-numeric:tabular-nums;margin-top:.25rem}
+  .tile .unit{font-size:.8rem;color:var(--text-muted);font-weight:400}
+  .tile.decision .val{font-size:1.15rem;font-weight:700}
+
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem 0.6rem;margin-bottom:1rem}
+  .panel h2{font-size:.8rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin:0 0 .5rem;font-weight:600;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap}
+  .legend{display:flex;gap:1rem;font-family:var(--sans);text-transform:none;letter-spacing:0;font-size:.8rem;color:var(--text-muted);font-weight:400}
+  .legend span{display:inline-flex;align-items:center;gap:.4rem}
+  .legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+  canvas{width:100%;display:block;border-radius:6px}
+  #chartTimeline{height:170px;cursor:crosshair}
+  #chartDb{height:110px;cursor:crosshair}
+  #chartSpectrum{height:150px}
+  .tip{position:fixed;pointer-events:none;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem;font-size:.78rem;font-family:var(--mono);display:none;z-index:10;color:var(--text);box-shadow:0 4px 14px rgba(0,0,0,.4)}
+  .tip b{color:var(--voz)}
+  details{margin:0 0 2rem}
+  summary{cursor:pointer;color:var(--text-muted);font-size:.85rem}
+  table{border-collapse:collapse;font-family:var(--mono);font-size:.75rem;margin-top:.6rem;font-variant-numeric:tabular-nums}
+  th,td{border:1px solid var(--border);padding:.3rem .55rem;text-align:right}
+  th{color:var(--text-muted);font-weight:600}
+  .note{color:var(--text-muted);font-size:.8rem;margin:.4rem 0 1.4rem;max-width:75ch}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>anti-<em>ruído</em> · o que o algoritmo vê, instante a instante</h1>
+  <p class="sub">Cena de teste: entrevista (voz-alvo) sobreposta com som de multidão. Aperte play e acompanhe as características do som no instante em que ele toca — e a decisão do filtro (manter ou atenuar). Alterne entre o áudio original e o filtrado.</p>
+
+  <div class="controls">
+    <button class="play" id="btnPlay">▶ Tocar</button>
+    <div class="seg" role="group" aria-label="Escolher áudio">
+      <button id="btnAntes" aria-pressed="true">Antes (mescla)</button>
+      <button id="btnDepois" aria-pressed="false">Depois (filtrado)</button>
+    </div>
+    <span class="time" id="clock">0:00.0 / 0:00</span>
+  </div>
+
+  <div class="tiles">
+    <div class="tile"><div class="lbl"><span class="chip" style="background:var(--nivel)"></span>Nível</div><div class="val" id="tDb">–<span class="unit"> dBFS</span></div></div>
+    <div class="tile"><div class="lbl"><span class="chip" style="background:var(--voz)"></span>Pitch (altura)</div><div class="val" id="tF0">–<span class="unit"> Hz</span></div></div>
+    <div class="tile"><div class="lbl"><span class="chip" style="background:var(--text-muted)"></span>Centroide (timbre)</div><div class="val" id="tCent">–<span class="unit"> Hz</span></div></div>
+    <div class="tile"><div class="lbl"><span class="chip" style="background:var(--voz)"></span>Semelhança c/ perfil</div><div class="val" id="tScore">–</div></div>
+    <div class="tile decision"><div class="lbl"><span class="chip" style="background:var(--ganho)"></span>Decisão do filtro</div><div class="val" id="tGain">–</div></div>
+  </div>
+
+  <div class="panel">
+    <h2>Linha do tempo — semelhança e ganho aplicado
+      <span class="legend">
+        <span><i style="background:var(--voz)"></i>semelhança com o perfil (0–1)</span>
+        <span><i style="background:var(--ganho)"></i>ganho aplicado (0–1)</span>
+        <span><i style="background:var(--text-muted);height:1px;border-top:1px dashed var(--text-muted);background:none"></i>tolerância de corte</span>
+      </span>
+    </h2>
+    <canvas id="chartTimeline"></canvas>
+  </div>
+
+  <div class="panel">
+    <h2>Nível do som <span class="legend"><span><i style="background:var(--nivel)"></i>RMS (dBFS)</span></span></h2>
+    <canvas id="chartDb"></canvas>
+  </div>
+
+  <div class="panel">
+    <h2>Espectro ao vivo <span class="legend"><span><i style="background:var(--nivel)"></i>magnitude por frequência (do áudio tocando agora)</span></span></h2>
+    <canvas id="chartSpectrum"></canvas>
+  </div>
+
+  <p class="note">Perfil da voz-alvo: pitch mediano <b id="pPitch">–</b> Hz (faixa <span id="pRange">–</span>), centroide <span id="pCent">–</span> Hz · tolerância <span id="pTol">–</span> · gradiente <span id="pGrad">–</span>. Clique em qualquer gráfico de linha do tempo para pular para aquele instante.</p>
+
+  <details>
+    <summary>Ver dados em tabela (amostrados a cada ~5 s)</summary>
+    <table id="dataTable"><thead><tr><th>t (s)</th><th>dBFS</th><th>pitch (Hz)</th><th>centroide (Hz)</th><th>semelhança</th><th>ganho</th></tr></thead><tbody></tbody></table>
+  </details>
+</div>
+<div class="tip" id="tip"></div>
+
+<script id="timeline-data" type="application/json">__TIMELINE__</script>
+<script>
+const DATA = JSON.parse(document.getElementById('timeline-data').textContent);
+const AUDIO_BEFORE = "__AUDIO_BEFORE__";
+const AUDIO_AFTER = "__AUDIO_AFTER__";
+
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const COL = { voz: css('--voz'), ganho: css('--ganho'), nivel: css('--nivel'),
+              grid: 'rgba(236,231,219,0.07)', muted: css('--text-muted') };
+
+const pts = DATA.points, DUR = DATA.duration_s;
+const ts = pts.map(p => p.t);
+
+// ---------- áudio (antes/depois compartilham a posição) ----------
+const audios = {
+  antes: new Audio("data:audio/mpeg;base64," + AUDIO_BEFORE),
+  depois: new Audio("data:audio/mpeg;base64," + AUDIO_AFTER),
+};
+let mode = 'antes', playing = false;
+let actx = null, analysers = {};
+function ensureCtx(){
+  if (actx) return;
+  actx = new (window.AudioContext || window.webkitAudioContext)();
+  for (const k of ['antes','depois']) {
+    const src = actx.createMediaElementSource(audios[k]);
+    const an = actx.createAnalyser(); an.fftSize = 2048; an.smoothingTimeConstant = 0.75;
+    src.connect(an); an.connect(actx.destination);
+    analysers[k] = an;
+  }
+}
+const cur = () => audios[mode];
+
+function setMode(m){
+  if (m === mode) return;
+  const t = cur().currentTime, wasPlaying = playing;
+  cur().pause();
+  mode = m;
+  cur().currentTime = t;
+  if (wasPlaying) cur().play();
+  document.getElementById('btnAntes').setAttribute('aria-pressed', String(m==='antes'));
+  document.getElementById('btnDepois').setAttribute('aria-pressed', String(m==='depois'));
+}
+document.getElementById('btnAntes').onclick = () => setMode('antes');
+document.getElementById('btnDepois').onclick = () => setMode('depois');
+
+const btnPlay = document.getElementById('btnPlay');
+btnPlay.onclick = () => {
+  ensureCtx(); actx.resume();
+  if (playing) { cur().pause(); } else { cur().play(); }
+};
+for (const k of ['antes','depois']) {
+  audios[k].addEventListener('play',  () => { playing = true;  btnPlay.textContent = '⏸ Pausar'; });
+  audios[k].addEventListener('pause', () => { playing = false; btnPlay.textContent = '▶ Tocar'; });
+  audios[k].addEventListener('ended', () => { playing = false; btnPlay.textContent = '▶ Tocar'; });
+}
+
+// ---------- busca binária do ponto no instante t ----------
+function pointAt(t){
+  let lo = 0, hi = ts.length - 1;
+  while (lo < hi) { const mid = (lo + hi + 1) >> 1; if (ts[mid] <= t) lo = mid; else hi = mid - 1; }
+  return pts[lo];
+}
+
+// ---------- canvas helpers ----------
+function fit(cv){
+  const r = cv.getBoundingClientRect();
+  if (cv.width !== r.width*devicePixelRatio || cv.height !== r.height*devicePixelRatio) {
+    cv.width = r.width*devicePixelRatio; cv.height = r.height*devicePixelRatio;
+  }
+  return cv.getContext('2d');
+}
+const PADL = 44, PADR = 10, PADT = 8, PADB = 20;
+
+function drawSeries(ctx, W, H, xs, ys, color, yMin, yMax){
+  ctx.beginPath();
+  ctx.strokeStyle = color; ctx.lineWidth = 2*devicePixelRatio;
+  ctx.lineJoin = 'round';
+  for (let i = 0; i < xs.length; i++) {
+    const x = PADL*devicePixelRatio + xs[i]*(W - (PADL+PADR)*devicePixelRatio);
+    const v = (ys[i]-yMin)/(yMax-yMin);
+    const y = H - PADB*devicePixelRatio - v*(H-(PADT+PADB)*devicePixelRatio);
+    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+}
+function frame(ctx, W, H, yTicks, fmt){
+  ctx.clearRect(0,0,W,H);
+  ctx.font = `${10*devicePixelRatio}px ${css('--mono')}`;
+  ctx.fillStyle = COL.muted; ctx.strokeStyle = COL.grid; ctx.lineWidth = 1;
+  for (const [v01, label] of yTicks) {
+    const y = H - PADB*devicePixelRatio - v01*(H-(PADT+PADB)*devicePixelRatio);
+    ctx.beginPath(); ctx.moveTo(PADL*devicePixelRatio, y); ctx.lineTo(W-PADR*devicePixelRatio, y); ctx.stroke();
+    ctx.textAlign = 'right'; ctx.fillText(label, (PADL-6)*devicePixelRatio, y+3*devicePixelRatio);
+  }
+  // eixo x: minutos
+  ctx.textAlign = 'center';
+  const stepS = DUR > 240 ? 60 : 30;
+  for (let s = 0; s <= DUR; s += stepS) {
+    const x = PADL*devicePixelRatio + (s/DUR)*(W-(PADL+PADR)*devicePixelRatio);
+    ctx.fillText(fmtTime(s), x, H-6*devicePixelRatio);
+  }
+}
+function playhead(ctx, W, H, t){
+  const x = PADL*devicePixelRatio + (t/DUR)*(W-(PADL+PADR)*devicePixelRatio);
+  ctx.strokeStyle = 'rgba(236,231,219,0.65)'; ctx.lineWidth = 1.5*devicePixelRatio;
+  ctx.beginPath(); ctx.moveTo(x, PADT*devicePixelRatio); ctx.lineTo(x, H-PADB*devicePixelRatio); ctx.stroke();
+}
+const fmtTime = s => `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+
+// dados pré-mapeados 0..1 no eixo x
+const xs01 = ts.map(t => t/DUR);
+const scoreY = pts.map(p => p.score);
+const gainY  = pts.map(p => p.gain);
+const dbY    = pts.map(p => p.db);
+const DB_MIN = -60, DB_MAX = 0;
+
+const cvT = document.getElementById('chartTimeline');
+const cvD = document.getElementById('chartDb');
+const cvS = document.getElementById('chartSpectrum');
+
+function drawTimeline(t){
+  const ctx = fit(cvT), W = cvT.width, H = cvT.height;
+  frame(ctx, W, H, [[0,'0'],[0.5,'0,5'],[1,'1']],);
+  // linha de tolerância (corte)
+  const yTol = H - PADB*devicePixelRatio - DATA.tolerance*(H-(PADT+PADB)*devicePixelRatio);
+  ctx.setLineDash([5*devicePixelRatio,4*devicePixelRatio]);
+  ctx.strokeStyle = COL.muted; ctx.lineWidth = 1*devicePixelRatio;
+  ctx.beginPath(); ctx.moveTo(PADL*devicePixelRatio,yTol); ctx.lineTo(W-PADR*devicePixelRatio,yTol); ctx.stroke();
+  ctx.setLineDash([]);
+  drawSeries(ctx, W, H, xs01, gainY,  COL.ganho, 0, 1);
+  drawSeries(ctx, W, H, xs01, scoreY, COL.voz,   0, 1);
+  playhead(ctx, W, H, t);
+}
+function drawDb(t){
+  const ctx = fit(cvD), W = cvD.width, H = cvD.height;
+  frame(ctx, W, H, [[0,'-60'],[0.5,'-30'],[1,'0']]);
+  drawSeries(ctx, W, H, xs01, dbY, COL.nivel, DB_MIN, DB_MAX);
+  playhead(ctx, W, H, t);
+}
+function drawSpectrum(){
+  const ctx = fit(cvS), W = cvS.width, H = cvS.height;
+  ctx.clearRect(0,0,W,H);
+  const an = analysers[mode];
+  if (!an) { ctx.fillStyle = COL.muted; ctx.font = `${12*devicePixelRatio}px ${css('--sans')}`;
+    ctx.textAlign='center'; ctx.fillText('Aperte play para ver o espectro ao vivo', W/2, H/2); return; }
+  const buf = new Uint8Array(an.frequencyBinCount);
+  an.getByteFrequencyData(buf);
+  // mostra até ~8 kHz (fala) — barras finas com respiro
+  const sr = actx.sampleRate, maxBin = Math.min(buf.length, Math.floor(8000/(sr/2)*buf.length));
+  const n = 96, bw = W/n;
+  ctx.fillStyle = COL.nivel;
+  for (let i = 0; i < n; i++) {
+    let acc = 0; const a = Math.floor(i*maxBin/n), b = Math.max(a+1, Math.floor((i+1)*maxBin/n));
+    for (let j=a;j<b;j++) acc += buf[j];
+    const v = (acc/(b-a))/255;
+    const h = v*(H-14*devicePixelRatio);
+    ctx.beginPath();
+    ctx.roundRect(i*bw+1, H-h, Math.max(1,bw-2*devicePixelRatio-1), h, 3*devicePixelRatio);
+    ctx.fill();
+  }
+}
+
+// ---------- tiles do instante ----------
+const el = id => document.getElementById(id);
+function updateTiles(p){
+  el('tDb').firstChild.nodeValue = Math.max(-60, p.db).toFixed(1);
+  el('tF0').firstChild.nodeValue = p.f0 == null ? '—' : Math.round(p.f0);
+  el('tCent').firstChild.nodeValue = Math.round(p.centroid);
+  el('tScore').textContent = p.score.toFixed(2);
+  const keep = p.score >= DATA.tolerance;
+  el('tGain').textContent = keep ? `mantém (×${p.gain.toFixed(2)})` : `atenua (×${p.gain.toFixed(2)})`;
+  el('tGain').style.color = keep ? COL.ganho : COL.muted;
+}
+
+// ---------- loop ----------
+let lastDraw = 0;
+function loop(ts_){
+  const t = cur().currentTime || 0;
+  el('clock').textContent = `${fmtTime(t)}.${Math.floor((t%1)*10)} / ${fmtTime(DUR)}`;
+  if (ts_ - lastDraw > 40) { // ~25 fps nos gráficos de linha
+    drawTimeline(t); drawDb(t); updateTiles(pointAt(t));
+    lastDraw = ts_;
+  }
+  drawSpectrum();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+// ---------- interação: clique para pular, hover para inspecionar ----------
+function chartX2t(cv, clientX){
+  const r = cv.getBoundingClientRect();
+  const x01 = ((clientX - r.left) - PADL) / (r.width - PADL - PADR);
+  return Math.min(DUR, Math.max(0, x01 * DUR));
+}
+const tip = document.getElementById('tip');
+for (const cv of [cvT, cvD]) {
+  cv.addEventListener('click', e => { cur().currentTime = chartX2t(cv, e.clientX); });
+  cv.addEventListener('mousemove', e => {
+    const t = chartX2t(cv, e.clientX), p = pointAt(t);
+    tip.style.display = 'block';
+    tip.style.left = Math.min(window.innerWidth-190, e.clientX+14) + 'px';
+    tip.style.top = (e.clientY+14) + 'px';
+    tip.innerHTML = `<b>${fmtTime(t)}</b> · ${p.db.toFixed(1)} dBFS<br>` +
+      `pitch ${p.f0==null?'—':Math.round(p.f0)+' Hz'} · centr. ${Math.round(p.centroid)} Hz<br>` +
+      `semelhança ${p.score.toFixed(2)} · ganho ×${p.gain.toFixed(2)}`;
+  });
+  cv.addEventListener('mouseleave', () => tip.style.display = 'none');
+}
+
+// ---------- cabeçalho do perfil + tabela ----------
+el('pPitch').textContent = Math.round(DATA.profile.pitch_median_hz);
+el('pRange').textContent = `${Math.round(DATA.profile.pitch_p10_hz)}–${Math.round(DATA.profile.pitch_p90_hz)} Hz`;
+el('pCent').textContent = Math.round(DATA.profile.spectral_centroid_hz);
+el('pTol').textContent = DATA.tolerance;
+el('pGrad').textContent = DATA.gradient;
+{
+  const tb = document.querySelector('#dataTable tbody');
+  const step = Math.max(1, Math.round(5 / (ts[1]-ts[0] || 0.05)));
+  for (let i = 0; i < pts.length; i += step) {
+    const p = pts[i], tr = document.createElement('tr');
+    tr.innerHTML = `<td>${p.t.toFixed(1)}</td><td>${p.db.toFixed(1)}</td><td>${p.f0==null?'—':Math.round(p.f0)}</td><td>${Math.round(p.centroid)}</td><td>${p.score.toFixed(2)}</td><td>${p.gain.toFixed(2)}</td>`;
+    tb.appendChild(tr);
+  }
+}
+</script>
+</body>
+</html>

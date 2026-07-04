@@ -191,3 +191,65 @@ def separate(
         tolerance=tolerance,
         gradient=gradient,
     )
+
+
+def filter_chunk(
+    y: np.ndarray,
+    sr: int,
+    profile: VoiceProfile,
+    tolerance: float = 0.5,
+    gradient: float = 0.85,
+) -> tuple[np.ndarray, dict]:
+    """Versão rápida para o modo AO VIVO (blocos de ~1s, sem pyin).
+
+    O pyin (pitch) domina o tempo de CPU do pipeline offline e inviabiliza o
+    tempo real; aqui o escore usa só timbre (MFCC) + porta de energia, o que
+    processa um bloco de 1s em dezenas de milissegundos. Mesmos controles de
+    tolerância e gradiente — ajustáveis a cada bloco, ao vivo.
+    Retorna (áudio filtrado, métricas do bloco p/ a interface).
+    """
+    if len(y) < N_FFT:
+        return y, {"score": 0.0, "gain": 1.0 - gradient, "db": -60.0}
+
+    mfcc = librosa.feature.mfcc(y=y, sr=sr, n_mfcc=N_MFCC, n_fft=N_FFT, hop_length=HOP)
+    mean = np.asarray(profile.mfcc_mean)[:, None]
+    std = np.asarray(profile.mfcc_std)[:, None]
+    z = (mfcc[1:] - mean[1:]) / std[1:]
+    dist = np.sqrt(np.mean(z**2, axis=0))
+    score = np.exp(-dist / 2.0)
+
+    rms = librosa.feature.rms(y=y, frame_length=N_FFT, hop_length=HOP)[0]
+    n = min(len(score), len(rms))
+    score, rms = score[:n], rms[:n]
+    score = score * (rms > np.percentile(rms, 20)).astype(float)
+    score = uniform_filter1d(score, size=6)
+    lo_s, hi_s = np.percentile(score, 5), np.percentile(score, 95)
+    if hi_s - lo_s > 1e-8:
+        score = np.clip((score - lo_s) / (hi_s - lo_s), 0.0, 1.0)
+
+    frame_mask = 1.0 / (1.0 + np.exp(-(score - tolerance) / 0.08))
+
+    stft = librosa.stft(y, n_fft=N_FFT, hop_length=HOP)
+    mag, phase = np.abs(stft), np.angle(stft)
+    nf = stft.shape[1]
+    fm = np.pad(frame_mask, (0, max(0, nf - len(frame_mask))), constant_values=0.5)[:nf]
+    sc = np.pad(score, (0, max(0, nf - len(score))), constant_values=0.0)[:nf]
+
+    noise_frames = mag[:, sc < np.percentile(sc, 30)]
+    if noise_frames.shape[1] >= 4:
+        n2 = np.mean(noise_frames**2, axis=1, keepdims=True)
+        wiener = np.maximum(1e-3, 1.0 - (1.0 + gradient) * n2 / (mag**2 + 1e-12))
+    else:
+        wiener = np.ones_like(mag)
+
+    gain = wiener * ((1.0 - gradient) + gradient * fm[None, :])
+    out = librosa.istft(mag * gain * np.exp(1j * phase), hop_length=HOP, length=len(y))
+    out = np.clip(out, -1.0, 1.0)
+
+    db = float(20 * np.log10(max(np.sqrt(np.mean(y**2)), 1e-10)))
+    return out, {
+        "score": round(float(np.mean(sc)), 3),
+        "gain": round(float(np.mean(gain)), 3),
+        "db": round(max(-60.0, db), 1),
+        "kept_pct": round(float(100.0 * np.mean(fm > 0.5)), 1),
+    }

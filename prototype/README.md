@@ -1,5 +1,31 @@
 # Protótipo Anti-Ruído — separação de fala com perfil de voz
 
+## App local (site offline) — ligar com `make`
+
+```bash
+cd prototype
+make          # cria o venv, instala dependências e sobe o app
+# abra http://localhost:8686 no navegador (permita o microfone)
+```
+
+Uma página, três passos:
+1. **Gravar amostra de perfil (10s)** — grava do microfone e aprende a voz-alvo. A amostra é **sempre cortada em 10s no máximo**. Sem gravação, o app já inicia com a **voz padrão da demo**.
+2. **Termômetro da voz (1-256)** — força do filtro, ajustável **durante** o modo ao vivo; em "Ajustes finos" dá para controlar tolerância e gradiente separadamente (múltiplos ajustes manuais).
+3. **Ao vivo** — o microfone é filtrado com base no perfil e devolvido na saída de áudio (fones). Processamento em blocos de ~1s (medido: ~0,1s de CPU por bloco; latência total percebida ~1-2s). **Use fones de ouvido** para não realimentar o microfone.
+
+Todos os áudios persistidos pelo app são salvos em **MP3** (`app/data/amostra-perfil.mp3`).
+
+### Dependências
+
+| Tipo | O quê |
+|---|---|
+| Sistema | `python3` (3.10+), `python3-venv`, `ffmpeg` — Ubuntu/Debian: `sudo apt install python3 python3-venv ffmpeg` · macOS: `brew install python ffmpeg` |
+| Python (o `make` instala no venv) | `numpy`, `scipy`, `librosa`, `soundfile`, `noisereduce` (requirements.txt) + `flask` (servidor do app) |
+| Opcional | `sounddevice` + `libportaudio2` (modo live do CLI, fora do app) · Docker (rodar o CLI em container) |
+| Navegador | qualquer um moderno com microfone (MediaRecorder + Web Audio) |
+
+---
+
 Captura som (microfone ou arquivo WAV), aprende o **perfil da voz de uma pessoa**
 (timbre, altura/pitch, intensidade, amplitude, decibéis) e **separa essa voz**
 dos sons de ambiente/ruídos externos, com dois ajustes:
