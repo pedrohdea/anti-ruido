@@ -1,6 +1,6 @@
 # Anti-Ruído — Documento Vivo de Validação de Negócio
 
-> **Status do loop de pesquisa:** Próxima rodada: **2** (SWOT + PESTEL) · Rodadas concluídas: 1/54 · Prazo do loop: até 2026-07-04 ~11:00 UTC (08:00 BRT)
+> **Status do loop de pesquisa:** Próxima rodada: **3** (Personas + Jobs To Be Done) · Rodadas concluídas: 2/54 · Prazo do loop: até 2026-07-04 ~11:00 UTC (08:00 BRT)
 > Este documento é atualizado automaticamente a cada rodada (~10 min) durante o Startup Weekend. Cada rodada foca em um ângulo/metodologia diferente — ver seção "Metodologia deste documento" no final.
 
 ## Resumo executivo (one-liner)
@@ -12,6 +12,7 @@
 ## Changelog
 
 - **Rodada 1** (Lean Canvas + concorrência direta de hardware): documento criado; Lean Canvas preenchido; panorama competitivo com 8 concorrentes/referências mapeados; estado da arte tecnológico inicial mapeado; README atualizado com o escopo real do produto.
+- **Rodada 2** (SWOT + PESTEL): preenchido SWOT e PESTEL. Achado importante: a FDA emitiu em 6/jan/2026 nova orientação que **facilita o enquadramento de earbuds que "amplificam e esclarecem vozes ao redor" como dispositivo de bem-estar (wellness)**, não como aparelho auditivo médico — reduz o risco regulatório identificado na rodada 1. Também mapeado: mercado de vida noturna/eventos ao vivo e dados de perda auditiva induzida por ruído em jovens.
 
 ## 1. Problema e evidência
 
@@ -91,11 +92,27 @@ Formato oficial usado no Startup Weekend / Techstars Entrepreneur's Toolkit (Ash
 
 ## 8. SWOT
 
-*Pendente — Rodada 2.*
+| | |
+|---|---|
+| **Forças (Strengths)** | Posicionamento claramente diferenciado de todos os concorrentes mapeados (B2C casual/social, nenhum incumbente ocupa esse espaço hoje); existe prova acadêmica de conceito tecnicamente próximo e aberta (Semantic Hearing/UW, código no GitHub); Krisp.ai já prova que "isolar 1 voz entre várias" funciona bem em software, reduzindo a incerteza de que o problema é solucionável em algum dispositivo |
+| **Fraquezas (Weaknesses)** | Nenhuma vantagem defensável (Unfair Advantage) comprovada ainda (canvas, seção 2); nenhum protótipo ou validação técnica de extração de voz rodando *on-device* em earbud (hoje só demonstrado em smartphone); zero histórico de marca/confiança no nicho de áudio |
+| **Oportunidades (Opportunities)** | FDA (EUA) publicou em 6/jan/2026 nova diretriz que trata earbuds que "amplificam e esclarecem vozes ao redor" como dispositivo de bem-estar, não aparelho auditivo regulado — **reduz risco regulatório** de forma relevante; mercado de hearables crescendo (US$55,8B em 2025 → US$62,2B em 2026 → US$107,1B em 2031, CAGR 11,47%); mercado de música ao vivo nos EUA em forte crescimento (US$18,51B em 2025 → US$19,7B em 2026, CAGR 6,45%) com Gen Z gastando US$2.100+ em 2 anos em shows — público dispensado a pagar por experiências, público-alvo plausível |
+| **Ameaças (Threats)** | Jovens <25 anos respondem por só ~8,1% do gasto em bares/baladas (tendência de beber menos) — pode estreitar o público-alvo ideal para frequentadores de eventos/shows em vez do "jovem de balada" genérico; incumbentes (Apple/Sony/Bose) podem estender recursos parecidos via firmware sem novo hardware; ~1 em cada 5 adultos de 20-29 anos já apresenta dano auditivo induzido por ruído — pode ser vento a favor (ângulo de proteção auditiva) ou ameaça (se o produto for lido como alegação de saúde, reabre risco regulatório) |
+
+Fontes desta rodada: [Bars & Nightclubs Market 2025-2026](https://www.mmcginvest.com/post/u-s-bars-nightclubs-industry-market-trends-valuations-outlook-for-investors), [US Live Music Market – Mordor Intelligence](https://www.mordorintelligence.com/industry-reports/united-states-live-music-market), [NIHL statistics – Nagish](https://nagish.com/post/noise-induced-hearing-loss-statistics), [CDC MMWR – Noise-Induced Hearing Loss Among Adults](https://www.cdc.gov/mmwr/volumes/66/wr/mm6605e3.htm).
 
 ## 9. PESTEL
 
-*Pendente — Rodada 2.*
+| Fator | Achado |
+|---|---|
+| **Político** | FDA (EUA) emitiu em 6/jan/2026 novas diretrizes que reduzem a exigência regulatória para wearables/dispositivos de "wellness" de baixo risco, incluindo esclarecimento específico sobre earbuds que amplificam/esclarecem vozes — tendência política favorável nos EUA. Equivalente brasileiro (ANVISA) ainda não pesquisado — pendente para rodada futura. |
+| **Econômico** | Mercado global de bares/baladas ~US$78-105B (2025-2026); música ao vivo nos EUA ~US$18,5-19,7B (2025-2026), crescendo 6,45% a.a.; mercado de hearables ~US$62,2B (2026) crescendo 11,47% a.a. até 2031 |
+| **Social** | Cultura de "economia da experiência" pós-pandemia impulsiona gasto em eventos ao vivo, mesmo com jovens <25 bebendo/frequentando bares menos; consciência sobre perda auditiva induzida por ruído entre jovens ainda é baixa apesar de ~1 em 5 (20-29 anos) já ter dano mensurável |
+| **Tecnológico** | Convergência de processamento de áudio avançado + IA + sensores biométricos está transformando hearables de "acessório de áudio simples" em "plataforma de computação vestível multifuncional" (Mordor Intelligence) — tendência favorável ao conceito do produto |
+| **Ambiental** | Pendente — a aprofundar na rodada 29 (sustentabilidade/ESG: baterias, e-waste de eletrônicos vestíveis) |
+| **Legal** | A nova diretriz da FDA (jan/2026) é o fator legal mais relevante encontrado até agora: ajuda a diferenciar produtos "wellness" (não regulados) de aparelhos auditivos convencionais regulados — favorece diretamente o posicionamento do Anti-Ruído como produto de conveniência/comunicação, não como dispositivo médico, desde que a comunicação de marketing evite alegações de "tratar perda auditiva" |
+
+Fontes desta rodada: [IEEE Spectrum – FDA 2026 Update for Wearables](https://spectrum.ieee.org/fda-medical-device-rules), [ConsumerAffairs – FDA relaxes rules for wearable health devices](https://www.consumeraffairs.com/news/fda-relaxes-rules-for-wearable-health-devices-010726.html), [STAT News – FDA pulls back oversight of AI-enabled devices/wearables](https://www.statnews.com/2026/01/06/fda-pulls-back-oversight-ai-enabled-devices-wearables/), [Mordor Intelligence – Hearables Market 2026-2031](https://www.mordorintelligence.com/industry-reports/hearables-market).
 
 ## 10. Porter's Five Forces
 
@@ -116,7 +133,7 @@ Referências de preço já coletadas (rodada 1): AirPods Pro ~US$250; Bose QC Ul
 **Riscos identificados na rodada 1 (aprofundamento de mitigação na rodada 32):**
 
 - **Técnico**: extrair voz-alvo em tempo real com baixa latência e baixo consumo de energia num chip de earbud (não num laptop) é território de pesquisa, não tecnologia "de prateleira" pronta — maior incerteza técnica do projeto.
-- **Regulatório**: a FDA oficializou em 2022 a categoria de **OTC Hearing Aids** (Bose, Jabra e o recurso "Hearing Aid" do AirPods Pro 2 já certificados). Qualquer alegação de "melhorar audição" (não só cancelar ruído) pode enquadrar o produto como dispositivo médico regulado, com exigências técnicas (ex.: limite de 111 dB SPL) e de rotulagem. Fonte: [FDA – OTC Hearing Aids](https://www.fda.gov/medical-devices/hearing-aids/otc-hearing-aids-what-you-should-know), [Federal Register 2022](https://www.federalregister.gov/documents/2022/08/17/2022-17230/medical-devices-ear-nose-and-throat-devices-establishing-over-the-counter-hearing-aids).
+- **Regulatório**: a FDA oficializou em 2022 a categoria de **OTC Hearing Aids** (Bose, Jabra e o recurso "Hearing Aid" do AirPods Pro 2 já certificados). Qualquer alegação de "melhorar audição" (não só cancelar ruído) pode enquadrar o produto como dispositivo médico regulado, com exigências técnicas (ex.: limite de 111 dB SPL) e de rotulagem. Fonte: [FDA – OTC Hearing Aids](https://www.fda.gov/medical-devices/hearing-aids/otc-hearing-aids-what-you-should-know), [Federal Register 2022](https://www.federalregister.gov/documents/2022/08/17/2022-17230/medical-devices-ear-nose-and-throat-devices-establishing-over-the-counter-hearing-aids). **Atualização (rodada 2, jan/2026):** a FDA publicou nova diretriz que trata earbuds que "amplificam e esclarecem vozes ao redor" como dispositivo de bem-estar (wellness), não aparelho auditivo regulado — **reduz esse risco**, desde que o marketing evite alegações de "tratar perda auditiva". Fonte: [IEEE Spectrum](https://spectrum.ieee.org/fda-medical-device-rules), [STAT News](https://www.statnews.com/2026/01/06/fda-pulls-back-oversight-ai-enabled-devices-wearables/). Ainda pendente: equivalente da ANVISA no Brasil.
 - **Mercado**: dois precedentes diretos de fracasso comercial em hearables "inteligentes" — **Doppler Labs** (levantou US$50M+, fechou em 2017) e **Nuheara** (liquidação em 2023). Ambos mostram que hardware de áudio "smart" tem histórico de dificuldade de tração e unit economics.
 - **Propriedade intelectual**: já existe pelo menos uma patente registrada (US 10923136) em técnica de extração de fala-alvo supervisionada — o espaço de IP não está vazio; aprofundar busca de patentes na rodada 5.
 - **Competitivo**: Apple, Sony e Bose têm recursos (Adaptive Audio, Conversation Awareness, Adaptive NC Optimizer) que já endereçam parte do problema e poderiam estender via **atualização de firmware** para competir diretamente, sem precisar de novo hardware — barreira de entrada baixa para incumbentes reagirem (aprofundar na rodada 7 e 30).
@@ -172,6 +189,18 @@ Referências de preço já coletadas (rodada 1): AirPods Pro ~US$250; Bose QC Ul
 - [Federal Register – Final Rule 2022](https://www.federalregister.gov/documents/2022/08/17/2022-17230/medical-devices-ear-nose-and-throat-devices-establishing-over-the-counter-hearing-aids)
 - [Mordor Intelligence – Hearables Market](https://www.mordorintelligence.com/industry-reports/hearables-market)
 - [Research and Markets – ANC Headphones Market](https://www.researchandmarkets.com/report/global-active-noise-cancelling-headphone-market)
+
+**Rodada 2:**
+- [Nagish – Noise-Induced Hearing Loss Statistics](https://nagish.com/post/noise-induced-hearing-loss-statistics)
+- [CDC MMWR – Noise-Induced Hearing Loss Among Adults 2011-2012](https://www.cdc.gov/mmwr/volumes/66/wr/mm6605e3.htm)
+- [MDPI – NIHL Awareness in Young Adults 18-30, Greece](https://www.mdpi.com/2039-4349/15/6/171)
+- [MMCG – US Bars & Nightclubs Industry 2025](https://www.mmcginvest.com/post/u-s-bars-nightclubs-industry-market-trends-valuations-outlook-for-investors)
+- [Mordor Intelligence – US Live Music Market](https://www.mordorintelligence.com/industry-reports/united-states-live-music-market)
+- [Coherent Market Insights – US Live Events Market](https://www.coherentmarketinsights.com/industry-reports/us-live-events-market)
+- [IEEE Spectrum – What the FDA's 2026 Update Means for Wearables](https://spectrum.ieee.org/fda-medical-device-rules)
+- [ConsumerAffairs – FDA relaxes rules for wearable health devices](https://www.consumeraffairs.com/news/fda-relaxes-rules-for-wearable-health-devices-010726.html)
+- [STAT News – FDA pulls back oversight of AI-enabled devices/wearables](https://www.statnews.com/2026/01/06/fda-pulls-back-oversight-ai-enabled-devices-wearables/)
+- [Mordor Intelligence – Hearables Market 2026-2031](https://www.mordorintelligence.com/industry-reports/hearables-market)
 
 ---
 
