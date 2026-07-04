@@ -34,7 +34,7 @@ def _cmd_separate(args: argparse.Namespace) -> int:
         args.output,
         tolerance=args.tolerance,
         gradient=args.gradient,
-        denoise=not args.no_denoise,
+        denoise=args.denoise,
     )
     print(f"OK: {res.output_path}")
     print(f"  duração: {res.duration_s:.1f}s | quadros mantidos como voz: {res.frames_kept_pct:.0f}%")
@@ -79,6 +79,14 @@ def _cmd_live(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_mix(args: argparse.Namespace) -> int:
+    from .mixer import mix_files
+
+    info = mix_files(args.voice, args.background, args.output, snr_db=args.snr)
+    print(f"OK: {info['output']} ({info['duration_s']}s, voz {info['snr_db']:+.0f} dB sobre o fundo)")
+    return 0
+
+
 def _cmd_demo(args: argparse.Namespace) -> int:
     from .demo import run_demo
 
@@ -101,7 +109,7 @@ def main(argv: list[str] | None = None) -> int:
     ss.add_argument("-o", "--output", default="saida.wav")
     ss.add_argument("-t", "--tolerance", type=float, default=0.5, help="corte de semelhança 0..1 (padrão 0.5)")
     ss.add_argument("-g", "--gradient", type=float, default=0.85, help="profundidade de atenuação 0..1 (padrão 0.85)")
-    ss.add_argument("--no-denoise", action="store_true", help="desliga a redução de ruído estacionário final")
+    ss.add_argument("--denoise", action="store_true", help="redução extra de ruído ESTACIONÁRIO (zumbido/ar-condicionado); piora contra burburinho")
     ss.set_defaults(fn=_cmd_separate)
 
     sl = sub.add_parser("live", help="captura do microfone e processa")
@@ -111,6 +119,13 @@ def main(argv: list[str] | None = None) -> int:
     sl.add_argument("-g", "--gradient", type=float, default=0.85)
     sl.add_argument("--block-seconds", type=float, default=1.0)
     sl.set_defaults(fn=_cmd_live)
+
+    sm = sub.add_parser("mix", help="mescla voz + fundo num WAV de teste com SNR controlado")
+    sm.add_argument("voice", help="WAV com a fala a preservar")
+    sm.add_argument("background", help="WAV com o ruído de fundo (multidão, bar...)")
+    sm.add_argument("-o", "--output", default="cena.wav")
+    sm.add_argument("--snr", type=float, default=0.0, help="dB da voz acima do fundo (padrão 0 = mesma energia)")
+    sm.set_defaults(fn=_cmd_mix)
 
     sd_ = sub.add_parser("demo", help="gera áudio sintético e roda o pipeline completo")
     sd_.add_argument("--workdir", default="demo-out")

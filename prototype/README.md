@@ -32,6 +32,18 @@ docker compose run --rm anti-ruido separate /data/bar.wav -p /data/perfil.json \
 
 # 3. Ao vivo, do microfone (Linux; o docker-compose já mapeia /dev/snd)
 docker compose run --rm anti-ruido live -p /data/perfil.json -o /data/live.wav
+
+# Extra: montar uma cena de teste mesclando fala + fundo com SNR controlado
+docker compose run --rm anti-ruido mix /data/voz.wav /data/multidao.wav -o /data/cena.wav --snr 0
+```
+
+Para testar com áudio do YouTube (na sua máquina, fora do container):
+
+```bash
+pip install yt-dlp   # requer ffmpeg instalado
+yt-dlp -x --audio-format wav --download-sections "*0-60" -o "data/multidao.%(ext)s" "URL_DO_VIDEO_DE_MULTIDAO"
+yt-dlp -x --audio-format wav --download-sections "*1736-1796" -o "data/fala.%(ext)s" "URL_DO_VIDEO_DE_FALA"
+docker compose run --rm anti-ruido mix /data/fala.wav /data/multidao.wav -o /data/cena.wav --snr 0
 ```
 
 Sem Docker: `pip install -r requirements.txt && python -m anti_ruido.cli demo`.
@@ -49,14 +61,38 @@ Sem Docker: `pip install -r requirements.txt && python -m anti_ruido.cli demo`.
 
 1. STFT do áudio; para cada quadro (~12 ms), um escore de semelhança com o
    perfil (60% timbre, 40% pitch, com porta de energia — silêncio nunca é voz).
-2. Máscara tempo-frequência: quadros abaixo da **tolerância** são atenuados
-   pela profundidade do **gradiente** (transição sigmoide, sem cliques); bins
-   fora da banda útil da voz também são atenuados.
-3. Redução final de ruído estacionário (spectral gating, via `noisereduce`).
+2. Máscara por quadro: abaixo da **tolerância**, o quadro é atenuado pela
+   profundidade do **gradiente** (transição sigmoide, sem cliques).
+3. Subtração de Wiener: o espectro do ruído é estimado dos 30% de quadros
+   menos parecidos com a voz e subtraído da cena inteira.
+4. `--denoise` (opcional): redução extra de ruído **estacionário** — ajuda
+   com zumbido/ar-condicionado; **piora contra burburinho** (medido, abaixo).
+
+## Resultados medidos com áudio real
+
+Cena de teste: fala real (LibriSpeech via MS-SNSD, `clean_test/clnsp1.wav`)
+mesclada com **burburinho real de multidão** (`noise_train/Babble_1.wav` do
+[microsoft/MS-SNSD](https://github.com/microsoft/MS-SNSD)) no mesmo volume
+(SNR 0 dB — "bar bem barulhento"). Perfil extraído de outro trecho da mesma
+pessoa. Métrica: SI-SDR (padrão da área) contra a voz limpa de referência.
+
+| Variante | SI-SDR | vs. cena |
+|---|---|---|
+| Cena com multidão (entrada) | −0,05 dB | — |
+| Máscara de quadro + banda (v0.1 inicial) | −0,25 dB | ~0 |
+| Pente harmônico no pitch-alvo | −1,77 dB | **piorou** (estimar o pitch-alvo dentro da mistura é o próprio problema difícil) |
+| **Máscara de quadro + Wiener (atual)** | **+1,34 dB** | **+1,4 dB** |
+| Atual + denoise estacionário | −1,66 dB | piorou (por isso `--denoise` é opt-in) |
+
+**Leitura honesta:** +1,4 dB contra burburinho é ganho real mas modesto —
+burburinho *é fala*, o pior caso da categoria. É exatamente por isso que o
+roadmap v0.2/v0.3 troca o escore DSP por embedding/máscara neurais. Contra
+ruído estacionário (demo sintética: voz + zumbido + chiado), o pipeline
+melhora o SNR em ~19 dB.
 
 **Limite conhecido:** com DSP clássico a separação é aproximada — suficiente
 para demonstrar o conceito e os controles. Para vozes muito parecidas ou
-burburinho denso, o passo 2 deve ser trocado por um embedding neural
+burburinho denso, o escore deve ser trocado por um embedding neural
 (mantendo os mesmos controles). Caminho de upgrade abaixo.
 
 ## Projetos de referência pesquisados (GitHub)
