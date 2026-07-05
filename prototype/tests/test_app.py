@@ -40,6 +40,30 @@ class TestAppServer(unittest.TestCase):
         self.assertEqual(r.status_code, 200)
         self.assertIn(b"anti-", r.data)
 
+    def test_health(self):
+        r = self.client.get("/api/health")
+        self.assertEqual(r.status_code, 200)
+        j = r.get_json()
+        self.assertTrue(j["ok"])
+        self.assertTrue(j["perfil_carregado"])
+
+    def test_cors_origem_permitida(self):
+        # a aba Demo do site (Cloudflare Pages) chama a API de outra origem
+        r = self.client.get("/api/health", headers={"Origin": "https://anti-ruido.pages.dev"})
+        self.assertEqual(r.headers.get("Access-Control-Allow-Origin"), "https://anti-ruido.pages.dev")
+
+    def test_cors_expose_metrics_header(self):
+        r = self.client.post(
+            "/api/filter?thermo=100",
+            data=self._wav_bytes(mixed_wav()),
+            headers={"Origin": "https://anti-ruido.pages.dev"},
+        )
+        self.assertIn("X-Metrics", r.headers.get("Access-Control-Expose-Headers", ""))
+
+    def test_cors_origem_nao_listada_sem_header(self):
+        r = self.client.get("/api/health", headers={"Origin": "https://site-qualquer.com"})
+        self.assertNotEqual(r.headers.get("Access-Control-Allow-Origin"), "https://site-qualquer.com")
+
     def test_perfil_padrao_existe(self):
         r = self.client.get("/api/profile")
         self.assertEqual(r.status_code, 200)

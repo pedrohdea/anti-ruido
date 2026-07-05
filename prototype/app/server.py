@@ -21,6 +21,7 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 from flask import Flask, jsonify, request, send_file
+from flask_cors import CORS
 
 import sys
 
@@ -40,6 +41,20 @@ SAMPLE_MP3 = DATA_DIR / "amostra-perfil.mp3"
 SR = 22050
 
 app = Flask(__name__, static_folder=str(APP_DIR / "static"), static_url_path="")
+
+# CORS: a aba Demo do site (Cloudflare) chama esta API de outra origem.
+# X-Metrics precisa ser exposto para o JS ler as métricas de cada bloco.
+CORS(
+    app,
+    resources={r"/api/*": {"origins": [
+        r"https://.*\.workers\.dev",
+        r"https://.*\.pages\.dev",
+        r"https://.*\.hf\.space",
+        r"http://localhost:.*",
+        r"http://127\.0\.0\.1:.*",
+    ]}},
+    expose_headers=["X-Metrics"],
+)
 
 _profile: VoiceProfile | None = None
 
@@ -92,6 +107,11 @@ def _thermo_to_params(thermo: int) -> tuple[float, float]:
 @app.get("/")
 def index():
     return app.send_static_file("index.html")
+
+
+@app.get("/api/health")
+def health():
+    return jsonify({"ok": True, "perfil_carregado": _profile is not None})
 
 
 @app.get("/api/profile")
@@ -173,5 +193,9 @@ def filter_live():
 _ensure_default_profile()
 
 if __name__ == "__main__":
-    print("\nAnti-Ruído app: http://localhost:8686  (Ctrl+C para parar)\n")
-    app.run(host="127.0.0.1", port=8686, debug=False)
+    import os
+
+    port = int(os.environ.get("PORT", "8686"))  # HF Spaces injeta PORT=7860
+    host = os.environ.get("HOST", "127.0.0.1" if port == 8686 else "0.0.0.0")
+    print(f"\nAnti-Ruído app: http://{host}:{port}  (Ctrl+C para parar)\n")
+    app.run(host=host, port=port, debug=False)

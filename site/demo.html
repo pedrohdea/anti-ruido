@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demo — Anti-Ruído</title>
+  <meta name="description" content="Experimente o Anti-Ruído agora: ouça uma cena real filtrada, ou grave sua voz e teste ao vivo no navegador." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%A7%3C/text%3E%3C/svg%3E" />
+  <style>
+    /* extras específicos da demo, em cima de styles.css */
+    .demo-card{background:var(--bg-raised);border:1px solid var(--border);border-radius:12px;padding:1.4rem 1.4rem 1.6rem;margin-bottom:1.6rem}
+    .demo-card h3{font-family:var(--serif);font-weight:500;font-size:1.2rem;margin:0 0 .6rem}
+    .demo-row{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center}
+    .abplayer{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-top:.8rem}
+    audio{width:100%;max-width:420px}
+    .pill-toggle{display:flex;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+    .pill-toggle button{background:transparent;border:none;color:var(--text-muted);padding:.5rem 1rem;font-size:.88rem;font:inherit;cursor:pointer}
+    .pill-toggle button[aria-pressed="true"]{background:var(--bg-sunken);color:var(--text);font-weight:600}
+    .status-line{font-family:var(--mono);font-size:.85rem;color:var(--text-muted);margin-top:.6rem;min-height:1.3em}
+    .status-line.err{color:#e0654f}
+    .status-line.ok{color:var(--voice-strong)}
+    .thermo-row{display:flex;align-items:center;gap:1rem;margin:.6rem 0}
+    .thermo-row input[type=range]{flex:1;accent-color:var(--voice)}
+    .thermo-row .v{font-family:var(--mono);font-weight:700;min-width:3ch;text-align:right}
+    details.fine{margin-top:.6rem}
+    details.fine summary{cursor:pointer;color:var(--text-muted);font-size:.85rem}
+    .fine-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.6rem}
+    .fine-grid label{font-size:.78rem;color:var(--text-muted);display:block}
+    .fine-grid input[type=range]{width:100%}
+    .tiles-mini{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:.6rem;margin-top:.8rem}
+    .tile-mini{background:var(--bg-sunken);border:1px solid var(--border);border-radius:8px;padding:.5rem .7rem}
+    .tile-mini .l{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}
+    .tile-mini .v2{font-size:1.1rem;font-weight:650;font-variant-numeric:tabular-nums}
+    button.btn.rec{background:#e0654f}
+    button.btn.live-on{background:#e0654f}
+    .offline-banner{background:var(--bg-sunken);border:1px solid var(--border);border-left:3px solid #e0654f;border-radius:8px;padding:.8rem 1rem;font-size:.88rem;color:var(--text-muted);margin-bottom:1.2rem;display:none}
+  </style>
+</head>
+<body>
+
+<header class="wrap">
+  <nav class="nav" aria-label="Principal">
+    <a class="brand" href="./">anti-<em>ruído</em></a>
+    <div class="nav-links">
+      <a href="./">Início</a>
+      <a href="como-funciona.html">Como funciona</a>
+      <a href="demo.html" aria-current="page">Demo</a>
+      <a class="btn small" href="https://forms.gle/3UcKsLHLppjGMw7M8" target="_blank" rel="noopener">Tenho interesse</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap hero" style="padding-bottom:1rem">
+    <p class="eyebrow">Demo ao vivo · no seu navegador</p>
+    <h1>Ouça o <em>antes e depois</em>, ou teste com a sua voz.</h1>
+    <p class="lede">Nada aqui é gravado em servidor além do necessário para processar o áudio na hora — a amostra de perfil fica só na sua sessão. Para o modo ao vivo, use fones de ouvido.</p>
+  </div>
+
+  <div class="wrap">
+    <div class="offline-banner" id="offlineBanner">
+      ⚠️ O servidor da demo ao vivo está fora do ar no momento (ele "dorme" depois de um tempo sem uso e leva ~30-60s para acordar — tente de novo em instantes). A demonstração abaixo com a cena pré-gravada continua funcionando normalmente.
+    </div>
+
+    <div class="demo-card">
+      <h3>1 · Cena real, antes e depois</h3>
+      <p style="color:var(--text-muted);font-size:.92rem;margin:0">Entrevista sobreposta com som real de multidão. Alterne entre o áudio original e o filtrado pelo protótipo — mesmo áudio, mesmo instante.</p>
+      <div class="pill-toggle" role="group" aria-label="Escolher versão" style="margin-top:.8rem;width:fit-content">
+        <button id="btnGuidedBefore" aria-pressed="true">Antes</button>
+        <button id="btnGuidedAfter" aria-pressed="false">Depois</button>
+      </div>
+      <div class="abplayer">
+        <audio id="guidedPlayer" controls preload="none" src="audio/cena-antes.mp3"></audio>
+      </div>
+    </div>
+
+    <div class="demo-card">
+      <h3>2 · Seu perfil de voz</h3>
+      <p style="color:var(--text-muted);font-size:.92rem;margin:0 0 .8rem">Grave 10 segundos falando normalmente. Sem gravar, a demo ao vivo usa uma voz de exemplo.</p>
+      <div class="demo-row">
+        <button class="btn rec" id="btnRec">● Gravar 10s</button>
+        <button class="btn ghost" id="btnDefaultProfile">Usar voz de exemplo</button>
+      </div>
+      <div class="status-line" id="profileStatus">verificando servidor da demo…</div>
+    </div>
+
+    <div class="demo-card">
+      <h3>3 · Termômetro do filtro</h3>
+      <div class="thermo-row">
+        <span style="color:var(--text-muted);font-size:.78rem">1<br>suave</span>
+        <input type="range" id="thermo" min="1" max="256" value="180" aria-label="Força do filtro" />
+        <span style="color:var(--text-muted);font-size:.78rem;text-align:right">256<br>máximo</span>
+        <span class="v" id="thermoV">180</span>
+      </div>
+      <details class="fine">
+        <summary>Ajustes finos (avançado)</summary>
+        <div class="fine-grid">
+          <div>
+            <label>Tolerância de corte <span id="tolV">auto</span></label>
+            <input type="range" id="tol" min="0" max="100" value="-1" />
+          </div>
+          <div>
+            <label>Gradiente de atenuação <span id="gradV">auto</span></label>
+            <input type="range" id="grad" min="0" max="100" value="-1" />
+          </div>
+        </div>
+        <button class="btn ghost small" id="btnAuto" style="margin-top:.6rem">voltar ao automático</button>
+      </details>
+    </div>
+
+    <div class="demo-card">
+      <h3>4 · Ao vivo, com sua voz</h3>
+      <p style="color:var(--text-muted);font-size:.92rem;margin:0 0 .8rem">Fale perto do microfone num ambiente com ruído (ou peça para alguém falar perto de uma música tocando). Latência esperada: 2-4 segundos, processado em blocos — é uma demo, não o produto final.</p>
+      <div class="demo-row">
+        <button class="btn" id="btnLive">▶ Ligar ao vivo</button>
+        <span class="status-line" id="liveStatus" style="margin-top:0">parado</span>
+      </div>
+      <div class="tiles-mini">
+        <div class="tile-mini"><div class="l">Nível</div><div class="v2" id="mDb">–</div></div>
+        <div class="tile-mini"><div class="l">Semelhança</div><div class="v2" id="mScore">–</div></div>
+        <div class="tile-mini"><div class="l">Ganho</div><div class="v2" id="mGain">–</div></div>
+        <div class="tile-mini"><div class="l">Mantidos</div><div class="v2" id="mKept">–</div></div>
+        <div class="tile-mini"><div class="l">Latência</div><div class="v2" id="mLat">–</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="cta-band">
+      <h2>Gostou do que ouviu?</h2>
+      <p>Conte pra gente — sua resposta decide se esse produto vai existir de verdade.</p>
+      <a class="btn" href="https://forms.gle/3UcKsLHLppjGMw7M8" target="_blank" rel="noopener">Responder o formulário de interesse</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Anti-Ruído — projeto nascido num Startup Weekend.</span>
+    <span><a href="./">Início</a> · <a href="como-funciona.html">Como funciona</a></span>
+  </div>
+</footer>
+
+<script>
+// ----- Config: URL da API do backend (Hugging Face Space) -----
+// Preenchida no deploy — enquanto vazia, a demo ao vivo/perfil fica desabilitada
+// e só a seção 1 (cena pré-gravada) funciona.
+const API_BASE = "__API_BASE__";
+
+const $ = id => document.getElementById(id);
+
+// ----- 1. Player guiado (antes/depois) -----
+const guidedPlayer = $('guidedPlayer');
+function setGuided(which){
+  const wasPlaying = !guidedPlayer.paused, t = guidedPlayer.currentTime;
+  guidedPlayer.src = which === 'before' ? 'audio/cena-antes.mp3' : 'audio/cena-depois.mp3';
+  guidedPlayer.currentTime = t;
+  if (wasPlaying) guidedPlayer.play();
+  $('btnGuidedBefore').setAttribute('aria-pressed', String(which==='before'));
+  $('btnGuidedAfter').setAttribute('aria-pressed', String(which==='after'));
+}
+$('btnGuidedBefore').onclick = () => setGuided('before');
+$('btnGuidedAfter').onclick  = () => setGuided('after');
+
+// ----- API disponível? -----
+let apiOnline = false;
+async function checkApi(){
+  if (!API_BASE) { setOffline('A demo ao vivo ainda não está publicada.'); return; }
+  try {
+    const r = await fetch(API_BASE + '/api/health', {mode:'cors'});
+    apiOnline = r.ok;
+  } catch { apiOnline = false; }
+  if (apiOnline) {
+    $('offlineBanner').style.display = 'none';
+    refreshProfileStatus();
+  } else {
+    setOffline();
+  }
+}
+function setOffline(msg){
+  $('offlineBanner').style.display = 'block';
+  if (msg) $('offlineBanner').textContent = '⚠️ ' + msg;
+  $('profileStatus').textContent = 'servidor indisponível — tente recarregar a página em instantes';
+  $('profileStatus').className = 'status-line err';
+  $('btnRec').disabled = $('btnDefaultProfile').disabled = $('btnLive').disabled = true;
+}
+checkApi();
+
+// ----- 2. Perfil -----
+async function refreshProfileStatus(){
+  try {
+    const r = await fetch(API_BASE + '/api/profile');
+    const j = await r.json();
+    $('profileStatus').textContent = j.descricao.split('\n')[0] + ' — pronto para uso';
+    $('profileStatus').className = 'status-line ok';
+  } catch { setOffline(); }
+}
+$('btnDefaultProfile').onclick = async () => {
+  $('profileStatus').textContent = 'restaurando voz de exemplo…'; $('profileStatus').className = 'status-line';
+  try {
+    await fetch(API_BASE + '/api/profile/default', {method:'POST'});
+    refreshProfileStatus();
+  } catch { setOffline(); }
+};
+$('btnRec').onclick = async () => {
+  const btn = $('btnRec');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    const rec = new MediaRecorder(stream);
+    const chunks = [];
+    rec.ondataavailable = e => chunks.push(e.data);
+    rec.start();
+    btn.disabled = true;
+    for (let s = 10; s > 0; s--) { btn.textContent = `● Gravando… (${s}s)`; await new Promise(r=>setTimeout(r,1000)); }
+    rec.stop();
+    await new Promise(r => rec.onstop = r);
+    stream.getTracks().forEach(t=>t.stop());
+    btn.textContent = 'processando…';
+    const resp = await fetch(API_BASE + '/api/profile', {method:'POST', body: new Blob(chunks,{type:rec.mimeType})});
+    const j = await resp.json();
+    $('profileStatus').textContent = resp.ok ? (j.descricao.split('\n')[0] + ' — pronto') : ('Erro: ' + j.erro);
+    $('profileStatus').className = resp.ok ? 'status-line ok' : 'status-line err';
+  } catch (e) {
+    $('profileStatus').textContent = 'Erro ao acessar o microfone: ' + e.message;
+    $('profileStatus').className = 'status-line err';
+  } finally { btn.disabled = false; btn.textContent = '● Gravar 10s'; }
+};
+
+// ----- 3. Termômetro / ajustes finos -----
+$('thermo').oninput = () => $('thermoV').textContent = $('thermo').value;
+const fine = { tol: null, grad: null };
+$('tol').oninput  = () => { fine.tol  = $('tol').value/100;  $('tolV').textContent  = fine.tol.toFixed(2); };
+$('grad').oninput = () => { fine.grad = $('grad').value/100; $('gradV').textContent = fine.grad.toFixed(2); };
+$('btnAuto').onclick = () => { fine.tol = fine.grad = null; $('tolV').textContent = $('gradV').textContent = 'auto'; };
+function filterURL(){
+  const p = new URLSearchParams({thermo: $('thermo').value});
+  if (fine.tol  != null) p.set('tolerance', fine.tol);
+  if (fine.grad != null) p.set('gradient', fine.grad);
+  return API_BASE + '/api/filter?' + p;
+}
+
+// ----- 4. Ao vivo -----
+let live=false, mediaStream=null, recorder=null, actx=null, nextT=0;
+const CHUNK_MS = 1000;
+
+$('btnLive').onclick = () => live ? stopLive() : startLive();
+
+async function startLive(){
+  if (!apiOnline) { await checkApi(); if (!apiOnline) return; }
+  try { mediaStream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:false}}); }
+  catch(e){ $('liveStatus').textContent = 'sem microfone: ' + e.message; return; }
+  actx = actx || new (window.AudioContext||window.webkitAudioContext)();
+  await actx.resume();
+  nextT = actx.currentTime + 0.3;
+  live = true;
+  $('btnLive').textContent = '⏹ Parar'; $('btnLive').classList.add('live-on');
+  $('liveStatus').textContent = 'ao vivo — filtrando pela internet…';
+  recordLoop();
+}
+function stopLive(){
+  live = false;
+  if (recorder && recorder.state !== 'inactive') recorder.stop();
+  if (mediaStream) mediaStream.getTracks().forEach(t=>t.stop());
+  $('btnLive').textContent = '▶ Ligar ao vivo'; $('btnLive').classList.remove('live-on');
+  $('liveStatus').textContent = 'parado';
+}
+function recordLoop(){
+  if (!live) return;
+  recorder = new MediaRecorder(mediaStream);
+  const chunks = [];
+  recorder.ondataavailable = e => chunks.push(e.data);
+  recorder.onstop = async () => {
+    if (!live) return;
+    recordLoop();
+    const t0 = performance.now();
+    try {
+      const resp = await fetch(filterURL(), {method:'POST', mode:'cors', body: new Blob(chunks,{type:recorder.mimeType})});
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const met = JSON.parse(resp.headers.get('X-Metrics') || '{}');
+      const buf = await resp.arrayBuffer();
+      const audio = await actx.decodeAudioData(buf);
+      const src = actx.createBufferSource();
+      src.buffer = audio; src.connect(actx.destination);
+      if (nextT < actx.currentTime) nextT = actx.currentTime + 0.05;
+      src.start(nextT); nextT += audio.duration;
+      $('mDb').textContent = (met.db ?? 0).toFixed(0) + ' dB';
+      $('mScore').textContent = (met.score ?? 0).toFixed(2);
+      $('mGain').textContent = '×' + (met.gain ?? 0).toFixed(2);
+      $('mKept').textContent = (met.kept_pct ?? 0).toFixed(0) + '%';
+      $('mLat').textContent = ((performance.now()-t0)/1000 + CHUNK_MS/1000).toFixed(1) + 's';
+    } catch(e) {
+      $('liveStatus').textContent = 'instável pela internet: ' + e.message + ' (tentando de novo…)';
+    }
+  };
+  recorder.start();
+  setTimeout(() => { if (recorder.state !== 'inactive') recorder.stop(); }, CHUNK_MS);
+}
+</script>
+</body>
+</html>
