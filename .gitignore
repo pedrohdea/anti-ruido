@@ -165,7 +165,7 @@ venv.bak/
 .ropeproject
 
 # mkdocs documentation
-/site
+# (entrada "/site" do template Python removida — /site aqui é o site estático do projeto, versionado)
 
 # mypy
 .mypy_cache/

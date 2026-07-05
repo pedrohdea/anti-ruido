@@ -1,0 +1,229 @@
+<title>Anti-Ruído — One-Pager de Validação</title>
+<meta name="description" content="Lean Canvas, concorrência e riscos do fone Anti-Ruído, Startup Weekend." />
+<style>
+  :root{
+    --bg:#f3efe6;
+    --bg-elevated:#ffffff;
+    --text:#211d17;
+    --text-muted:#6b6355;
+    --accent:#c9701f;
+    --accent-ink:#7a3d0e;
+    --signal:#2f6f5e;
+    --border:rgba(33,29,23,0.14);
+    --shadow:0 1px 2px rgba(33,29,23,0.06);
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --serif:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1a1712;
+      --bg-elevated:#242019;
+      --text:#ece6d9;
+      --text-muted:#a89c86;
+      --accent:#e8a33d;
+      --accent-ink:#ffd699;
+      --signal:#5fb39c;
+      --border:rgba(236,230,217,0.14);
+      --shadow:0 1px 2px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1a1712; --bg-elevated:#242019; --text:#ece6d9; --text-muted:#a89c86;
+    --accent:#e8a33d; --accent-ink:#ffd699; --signal:#5fb39c; --border:rgba(236,230,217,0.14);
+    --shadow:0 1px 2px rgba(0,0,0,0.35);
+  }
+  :root[data-theme="light"]{
+    --bg:#f3efe6; --bg-elevated:#ffffff; --text:#211d17; --text-muted:#6b6355;
+    --accent:#c9701f; --accent-ink:#7a3d0e; --signal:#2f6f5e; --border:rgba(33,29,23,0.14);
+    --shadow:0 1px 2px rgba(33,29,23,0.06);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text); font-family:var(--sans);
+    line-height:1.5; padding:0 0 4rem;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:0 1.5rem;}
+  header.hero{
+    padding:3.5rem 0 2rem; border-bottom:1px solid var(--border);
+    display:flex; flex-direction:column; gap:1rem;
+  }
+  .eyebrow{
+    font-family:var(--mono); font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--signal); display:flex; gap:0.6rem; align-items:center;
+  }
+  .eyebrow::before{content:"●"; font-size:0.6rem;}
+  h1{
+    font-family:var(--serif); font-weight:400; font-size:clamp(2.2rem,5vw,3.4rem);
+    margin:0; text-wrap:balance; letter-spacing:-0.01em;
+  }
+  h1 em{font-style:italic; color:var(--accent-ink);}
+  .oneliner{
+    font-size:1.15rem; color:var(--text-muted); max-width:60ch; text-wrap:balance;
+  }
+  canvas#wave{width:100%; height:64px; display:block; margin-top:0.5rem;}
+  .statusbar{
+    display:flex; flex-wrap:wrap; gap:1.5rem; padding:1rem 0; font-family:var(--mono); font-size:0.8rem;
+    color:var(--text-muted);
+  }
+  .statusbar b{color:var(--text); font-variant-numeric:tabular-nums;}
+  section{padding:2.2rem 0; border-bottom:1px solid var(--border);}
+  section:last-of-type{border-bottom:none;}
+  h2{
+    font-family:var(--serif); font-size:1.5rem; font-weight:400; margin:0 0 1.1rem;
+    display:flex; align-items:baseline; gap:0.6rem;
+  }
+  h2 .tag{font-family:var(--mono); font-size:0.7rem; color:var(--signal); letter-spacing:0.06em;}
+  p{margin:0 0 0.8rem; max-width:68ch;}
+  .canvas-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border);
+    border:1px solid var(--border); border-radius:6px; overflow:hidden;
+  }
+  .canvas-grid .cell{background:var(--bg-elevated); padding:1rem;}
+  .canvas-grid .cell.wide{grid-column:span 3;}
+  .canvas-grid .cell.tall{grid-row:span 2;}
+  .cell h3{
+    font-family:var(--mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:0.08em;
+    color:var(--signal); margin:0 0 0.5rem;
+  }
+  .cell p{font-size:0.88rem; margin:0; color:var(--text);}
+  .cell.unfair{background:linear-gradient(180deg, color-mix(in srgb, var(--accent) 10%, var(--bg-elevated)), var(--bg-elevated));}
+  .table-scroll{overflow-x:auto; border:1px solid var(--border); border-radius:6px;}
+  table{border-collapse:collapse; width:100%; min-width:640px; font-size:0.86rem;}
+  thead th{
+    text-align:left; font-family:var(--mono); font-size:0.68rem; text-transform:uppercase;
+    letter-spacing:0.06em; color:var(--text-muted); background:var(--bg-elevated);
+    padding:0.65rem 0.8rem; border-bottom:1px solid var(--border); position:sticky; top:0;
+  }
+  tbody td{padding:0.65rem 0.8rem; border-bottom:1px solid var(--border); vertical-align:top; background:var(--bg-elevated);}
+  tbody tr:last-child td{border-bottom:none;}
+  .highlight-row td{background:color-mix(in srgb, var(--accent) 8%, var(--bg-elevated));}
+  .risk-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:0.9rem;}
+  .risk{
+    background:var(--bg-elevated); border:1px solid var(--border); border-radius:6px; padding:1rem;
+    border-left:3px solid var(--accent);
+  }
+  .risk h4{margin:0 0 0.4rem; font-size:0.92rem;}
+  .risk p{font-size:0.84rem; color:var(--text-muted); margin:0;}
+  footer{padding-top:2rem; font-family:var(--mono); font-size:0.74rem; color:var(--text-muted);}
+  footer a{color:var(--signal);}
+  a{color:inherit;}
+  @media (prefers-reduced-motion: reduce){canvas#wave{display:none;}}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <span class="eyebrow">Startup Weekend · Documento vivo · 54/54 rodadas concluídas</span>
+    <h1>Ouça <em>uma</em> voz, mesmo quando tudo ao redor é ruído.</h1>
+    <p class="oneliner">Anti-Ruído é um fone B2C que gera ruído branco adaptativo ao ambiente e isola a voz de quem está conversando com você — para funcionar em bares, restaurantes, eventos e transporte público, onde os fones de hoje só cancelam ruído ou reagem à sua própria fala.</p>
+    <canvas id="wave" aria-hidden="true"></canvas>
+  </header>
+
+  <div class="statusbar">
+    <span>Fases A-E + 2 revisões críticas: <b>completas</b></span>
+    <span>Preço-alvo: <b>US$199-349</b></span>
+    <span>Mercado inicial: <b>Brasil</b></span>
+    <span>Avaliação final: <b>7,6/10</b></span>
+    <span>Fontes citadas: <b>65+</b></span>
+  </div>
+
+  <section>
+    <h2>Lean Canvas <span class="tag">metodologia oficial Startup Weekend / Techstars</span></h2>
+    <div class="canvas-grid">
+      <div class="cell tall"><h3>Problem</h3><p>Conversar é difícil em ambientes ruidosos; ANC atual cancela ruído mas não isola a voz de quem fala com você; Orosound resolve isso mas só para escritórios (B2B).</p></div>
+      <div class="cell tall"><h3>Solution</h3><p>ANC + microfones direcionais + extração seletiva da voz de uma pessoa-alvo + ruído branco adaptado ao espectro do ambiente. <em>(conceito — não construído neste evento)</em></p></div>
+      <div class="cell tall"><h3>Unique Value Proposition</h3><p>"Converse com clareza em qualquer lugar, por mais barulhento que seja" — escolha ouvir uma pessoa específica acima do caos.</p></div>
+      <div class="cell"><h3>Customer Segments</h3><p>Jovens urbanos (18–35) que frequentam bares, eventos, restaurantes; passageiros de transporte público.</p></div>
+      <div class="cell"><h3>Key Metrics</h3><p>Taxa de sucesso de isolamento em teste subjetivo; intenção de compra pré-venda; NPS em uso real.</p></div>
+      <div class="cell unfair"><h3>Unfair Advantage</h3><p>Ainda a definir — maior risco aberto do canvas. Candidato: ser o único focado em uso <em>social/casual</em>, gap deixado pela Orosound.</p></div>
+      <div class="cell"><h3>Channels</h3><p>Crowdfunding (Kickstarter/Indiegogo), redes sociais, parcerias com casas de evento, D2C.</p></div>
+      <div class="cell"><h3>Revenue Streams</h3><p>Venda de hardware (US$199–349 alvo, ajustado por dados de disposição a pagar) + possível assinatura de app + licenciamento B2B2C do algoritmo (tipo Dolby/DTS).</p></div>
+      <div class="cell"><h3>Cost Structure</h3><p>P&amp;D de ML de voz, fabricação ODM/OEM, certificações regulatórias, marketing de lançamento.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Panorama competitivo</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Concorrente</th><th>Categoria</th><th>Gap / oportunidade</th></tr></thead>
+        <tbody>
+          <tr class="highlight-row"><td>Apple AirPods Pro 3</td><td>Consumer ANC premium</td><td>⚠️ Já tem Conversation Boost automático (amplifica quem fala com você) — concorrente mais perigoso; falta só a seleção de voz-alvo específica</td></tr>
+          <tr><td>Subtle Voicebuds (CES 2026)</td><td>Hearable de voz, US$199</td><td>Isola a própria voz do usuário (problema inverso) — valida o preço-alvo</td></tr>
+          <tr><td>Sony WH-1000XM6</td><td>Consumer ANC premium</td><td>Foca em cancelar ruído, não em isolar voz-alvo</td></tr>
+          <tr><td>Bose QC Ultra</td><td>Consumer ANC premium</td><td>Modo "Aware" genérico, sem seleção de voz</td></tr>
+          <tr class="highlight-row"><td>Orosound Tilde</td><td>B2B escritório</td><td>Tecnologia mais próxima — mas 100% corporativa, não social</td></tr>
+          <tr><td>Nuheara IQbuds² MAX</td><td>Hearable/PSAP</td><td>Empresa em liquidação (2023) — alerta de mercado</td></tr>
+          <tr><td>Jabra Enhance</td><td>Hearing aid OTC</td><td>Referência de preço (US$995–1995), mas categoria médica regulada</td></tr>
+          <tr><td>Doppler Labs (Here One)</td><td>Smart earbuds — descontinuado</td><td>Caso de fracasso: US$50M levantados, fechou em 2017</td></tr>
+          <tr><td>Krisp.ai Voice Isolation</td><td>Software (não hardware)</td><td>Prova que isolar 1 voz já funciona — falta rodar isso num earbud</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Riscos e mitigação</h2>
+    <div class="risk-grid">
+      <div class="risk"><h4>Técnico</h4><p>Extração de voz-alvo on-device, baixa energia. Mitigação: validar com mentor técnico; construir sobre chipset Qualcomm Snapdragon S7, que já comoditiza parte do processamento.</p></div>
+      <div class="risk"><h4>Regulatório</h4><p>FDA (jan/2026) e ANVISA (fev/2025, caso AirPods Pro 2) já distinguem "wellness" de aparelho auditivo regulado — risco reduzido, desde que o marketing evite alegar "tratar audição".</p></div>
+      <div class="risk"><h4>Mercado</h4><p>Doppler Labs e Nuheara fracassaram por bateria fraca e proposta difusa. Mitigação: validar autonomia e clareza da proposta antes de escalar.</p></div>
+      <div class="risk"><h4>Propriedade intelectual</h4><p>Patentes já existem (US 10923136, Google US20220122611A1). Mitigação: construir sobre pesquisa acadêmica aberta + assessoria jurídica.</p></div>
+      <div class="risk"><h4>Competitivo — parcialmente materializado</h4><p>AirPods Pro 3 já lançou Conversation Boost automático (~US$249). Diferenciação restante: seleção de voz-alvo específica, multi-falante, fora do ecossistema Apple. Mitigação: validar se isso basta para o cliente pagar, antes de construir.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Requisitos para sucesso <span class="tag">consolidado após 54 rodadas</span></h2>
+    <ol style="margin:0; padding-left:1.2rem; font-size:0.92rem; display:flex; flex-direction:column; gap:0.5rem;">
+      <li>Foco inegociável no consumidor casual/social — o único espaço não disputado.</li>
+      <li>Resolver ou terceirizar rápido a incerteza técnica central (extração de voz on-device).</li>
+      <li>Marketing sempre fora do território de "dispositivo médico" (FDA/ANVISA).</li>
+      <li>Validar disposição a pagar com pessoas reais antes de fabricar.</li>
+      <li>Orçar certificação (ANATEL e equivalentes) desde o dia 1.</li>
+      <li>Construir marca/comunidade antes que o recurso vire commodity de firmware.</li>
+      <li>Aprender com os fracassos do setor (bateria, proposta de valor difusa).</li>
+    </ol>
+  </section>
+
+  <footer>
+    Documento completo com fontes, SWOT, PESTEL, personas, pricing e mais em <a href="../docs/business-validation.md">docs/business-validation.md</a>. Gerado a partir das 54 rodadas de pesquisa do loop de validação.
+  </footer>
+</div>
+
+<script>
+(function(){
+  var c=document.getElementById('wave');
+  if(!c) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ctx=c.getContext('2d');
+  function size(){
+    var r=c.getBoundingClientRect();
+    c.width=r.width*devicePixelRatio; c.height=r.height*devicePixelRatio;
+  }
+  size();
+  window.addEventListener('resize', size);
+  function accentColor(){
+    return getComputedStyle(document.documentElement).getPropertyValue('--signal').trim() || '#2f6f5e';
+  }
+  var t=0;
+  function draw(){
+    var w=c.width, h=c.height;
+    ctx.clearRect(0,0,w,h);
+    ctx.strokeStyle=accentColor();
+    ctx.lineWidth=Math.max(1.5, h*0.025);
+    ctx.beginPath();
+    var mid=h/2;
+    for(var x=0;x<=w;x+=4){
+      var noise=(Math.sin((x*0.02)+t*0.6)*0.15+Math.sin((x*0.07)+t*1.3)*0.08)*h*0.5;
+      var voice=Math.sin((x*0.01)+t)*Math.sin(x*0.003+t*0.2)*h*0.32;
+      var y = mid + voice*Math.max(0,Math.sin(x*0.004+t*0.15)) + noise*0.4;
+      if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    t+=0.02;
+    if(!reduce) requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>

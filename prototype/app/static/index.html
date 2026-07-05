@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Anti-Ruído — app local</title>
+<style>
+  :root{
+    --bg:#101318; --surface:#1a1a19; --surface-2:#22221f;
+    --text:#ece7db; --text-muted:#9a948a; --border:rgba(236,231,219,0.12);
+    --voz:#c98500; --ganho:#199e70; --nivel:#3987e5; --perigo:#e34948;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --serif:Georgia,"Iowan Old Style",serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);padding:1.2rem;line-height:1.5}
+  .wrap{max-width:860px;margin:0 auto}
+  h1{font-family:var(--serif);font-weight:500;font-size:1.7rem;margin:0}
+  h1 em{color:var(--voz);font-style:italic}
+  .sub{color:var(--text-muted);font-size:.9rem;margin:.3rem 0 1.4rem;max-width:66ch}
+  .warn{background:rgba(227,73,72,.12);border:1px solid rgba(227,73,72,.4);border-radius:8px;padding:.6rem .9rem;font-size:.85rem;margin-bottom:1rem}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.2rem;margin-bottom:1rem}
+  .card h2{font-size:.8rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin:0 0 .7rem;font-weight:600}
+  button{font:inherit;cursor:pointer;border-radius:999px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);padding:.6rem 1.3rem}
+  button:hover{border-color:rgba(236,231,219,.3)}
+  button.primary{background:var(--voz);border-color:var(--voz);color:#14100a;font-weight:700}
+  button.primary:hover{filter:brightness(1.1)}
+  button.live-on{background:var(--perigo);border-color:var(--perigo);color:#fff;font-weight:700}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  button:focus-visible{outline:2px solid var(--voz);outline-offset:2px}
+  .row{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
+  .status{font-family:var(--mono);font-size:.82rem;color:var(--text-muted);margin-top:.6rem;white-space:pre-wrap}
+  .thermo{display:flex;align-items:center;gap:1rem;margin:.4rem 0}
+  .thermo input[type=range]{flex:1;accent-color:var(--voz);height:6px}
+  .thermo .v{font-family:var(--mono);font-size:1.3rem;font-weight:700;min-width:3ch;text-align:right;font-variant-numeric:tabular-nums}
+  .fine{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.8rem}
+  .fine label{font-size:.78rem;color:var(--text-muted);display:block}
+  .fine input[type=range]{width:100%;accent-color:var(--ganho)}
+  .fine .fv{font-family:var(--mono);font-size:.8rem}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.7rem;margin-top:.8rem}
+  .tile{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem}
+  .tile .lbl{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted)}
+  .tile .val{font-size:1.25rem;font-weight:650;font-variant-numeric:tabular-nums}
+  canvas#spec{width:100%;height:110px;display:block;margin-top:.8rem;border-radius:6px}
+  .muted{color:var(--text-muted)}
+  a{color:var(--voz)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>anti-<em>ruído</em> · app local</h1>
+  <p class="sub">Grave 10 segundos da voz que você quer ouvir (ou use a voz padrão da demo), ligue o modo ao vivo e ajuste o termômetro. O que entra pelo microfone sai filtrado nos seus fones.</p>
+  <div class="warn">⚠️ Use <b>fones de ouvido</b> — sem eles, o som filtrado volta pelo microfone e realimenta (eco). A latência do protótipo é de ~1-2s (processamento em blocos).</div>
+
+  <div class="card">
+    <h2>1 · Perfil de voz</h2>
+    <div class="row">
+      <button class="primary" id="btnRec">● Gravar amostra de perfil (10s)</button>
+      <button id="btnDefault">Usar voz padrão (demo)</button>
+    </div>
+    <div class="status" id="profStatus">carregando perfil…</div>
+  </div>
+
+  <div class="card">
+    <h2>2 · Termômetro da voz (força do filtro)</h2>
+    <div class="thermo">
+      <span class="muted" style="font-size:.8rem">1<br>suave</span>
+      <input type="range" id="thermo" min="1" max="256" value="180" aria-label="Termômetro do filtro, 1 a 256" />
+      <span class="muted" style="font-size:.8rem;text-align:right">256<br>máximo</span>
+      <span class="v" id="thermoV">180</span>
+    </div>
+    <details>
+      <summary class="muted" style="cursor:pointer;font-size:.82rem">Ajustes finos (sobrepõem o termômetro)</summary>
+      <div class="fine">
+        <div>
+          <label for="tol">Tolerância de corte <span class="fv" id="tolV">auto</span></label>
+          <input type="range" id="tol" min="0" max="100" value="-1" />
+        </div>
+        <div>
+          <label for="grad">Gradiente de atenuação <span class="fv" id="gradV">auto</span></label>
+          <input type="range" id="grad" min="0" max="100" value="-1" />
+        </div>
+      </div>
+      <button id="btnAuto" style="margin-top:.6rem;font-size:.8rem;padding:.35rem .9rem">voltar ao automático</button>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>3 · Ao vivo</h2>
+    <div class="row">
+      <button class="primary" id="btnLive">▶ Ligar ao vivo</button>
+      <span class="status" id="liveStatus" style="margin-top:0">parado</span>
+    </div>
+    <div class="tiles">
+      <div class="tile"><div class="lbl">Nível de entrada</div><div class="val" id="mDb">–</div></div>
+      <div class="tile"><div class="lbl">Semelhança média</div><div class="val" id="mScore">–</div></div>
+      <div class="tile"><div class="lbl">Ganho médio</div><div class="val" id="mGain">–</div></div>
+      <div class="tile"><div class="lbl">Quadros mantidos</div><div class="val" id="mKept">–</div></div>
+      <div class="tile"><div class="lbl">Latência</div><div class="val" id="mLat">–</div></div>
+    </div>
+    <canvas id="spec" aria-hidden="true"></canvas>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+// ---------- perfil ----------
+async function refreshProfile(){
+  const r = await fetch('/api/profile'); const j = await r.json();
+  $('profStatus').textContent = j.descricao;
+}
+refreshProfile();
+
+$('btnDefault').onclick = async () => {
+  $('profStatus').textContent = 'restaurando voz padrão…';
+  const r = await fetch('/api/profile/default', {method:'POST'});
+  const j = await r.json(); $('profStatus').textContent = j.descricao;
+};
+
+$('btnRec').onclick = async () => {
+  const btn = $('btnRec');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    const rec = new MediaRecorder(stream);
+    const chunks = [];
+    rec.ondataavailable = e => chunks.push(e.data);
+    rec.start();
+    btn.disabled = true;
+    for (let s = 10; s > 0; s--) {
+      btn.textContent = `● Gravando… fale normalmente (${s}s)`;
+      await new Promise(r => setTimeout(r, 1000));
+    }
+    rec.stop();
+    await new Promise(r => rec.onstop = r);
+    stream.getTracks().forEach(t => t.stop());
+    btn.textContent = 'processando…';
+    const blob = new Blob(chunks, {type: rec.mimeType});
+    const resp = await fetch('/api/profile', {method:'POST', body: blob});
+    const j = await resp.json();
+    $('profStatus').textContent = resp.ok ? j.descricao : ('Erro: ' + j.erro);
+  } catch (e) {
+    $('profStatus').textContent = 'Erro ao acessar o microfone: ' + e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = '● Gravar amostra de perfil (10s)';
+  }
+};
+
+// ---------- controles ----------
+$('thermo').oninput = () => $('thermoV').textContent = $('thermo').value;
+const fineState = { tol: null, grad: null };
+$('tol').oninput  = () => { fineState.tol  = $('tol').value/100;  $('tolV').textContent  = fineState.tol.toFixed(2); };
+$('grad').oninput = () => { fineState.grad = $('grad').value/100; $('gradV').textContent = fineState.grad.toFixed(2); };
+$('btnAuto').onclick = () => { fineState.tol = fineState.grad = null; $('tolV').textContent = $('gradV').textContent = 'auto'; };
+
+function filterURL(){
+  const p = new URLSearchParams({thermo: $('thermo').value});
+  if (fineState.tol  != null) p.set('tolerance', fineState.tol);
+  if (fineState.grad != null) p.set('gradient', fineState.grad);
+  return '/api/filter?' + p;
+}
+
+// ---------- ao vivo ----------
+let live = false, mediaStream = null, recorder = null, actx = null, nextT = 0, analyser = null;
+const CHUNK_MS = 1000;
+
+$('btnLive').onclick = async () => live ? stopLive() : startLive();
+
+async function startLive(){
+  try { mediaStream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true, noiseSuppression:false}}); }
+  catch (e) { $('liveStatus').textContent = 'sem microfone: ' + e.message; return; }
+  actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+  await actx.resume();
+  analyser = actx.createAnalyser(); analyser.fftSize = 1024;
+  nextT = actx.currentTime + 0.3;
+  live = true;
+  $('btnLive').textContent = '⏹ Parar'; $('btnLive').classList.add('live-on');
+  $('liveStatus').textContent = 'ao vivo — filtrando…';
+  recordLoop();
+  drawSpec();
+}
+
+function stopLive(){
+  live = false;
+  if (recorder && recorder.state !== 'inactive') recorder.stop();
+  if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+  $('btnLive').textContent = '▶ Ligar ao vivo'; $('btnLive').classList.remove('live-on');
+  $('liveStatus').textContent = 'parado';
+}
+
+function recordLoop(){
+  if (!live) return;
+  // um MediaRecorder novo por bloco: cada blob fica autocontido (com cabeçalho)
+  recorder = new MediaRecorder(mediaStream);
+  const chunks = [];
+  recorder.ondataavailable = e => chunks.push(e.data);
+  recorder.onstop = async () => {
+    if (!live) return;
+    recordLoop(); // já inicia o próximo bloco enquanto este é processado
+    const t0 = performance.now();
+    try {
+      const resp = await fetch(filterURL(), {method:'POST', body: new Blob(chunks, {type: recorder.mimeType})});
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const met = JSON.parse(resp.headers.get('X-Metrics') || '{}');
+      const buf = await resp.arrayBuffer();
+      const audio = await actx.decodeAudioData(buf);
+      const src = actx.createBufferSource();
+      src.buffer = audio;
+      src.connect(analyser); analyser.connect(actx.destination);
+      if (nextT < actx.currentTime) nextT = actx.currentTime + 0.05;
+      src.start(nextT);
+      nextT += audio.duration;
+      // métricas
+      $('mDb').textContent = (met.db ?? 0).toFixed(0) + ' dB';
+      $('mScore').textContent = (met.score ?? 0).toFixed(2);
+      $('mGain').textContent = '×' + (met.gain ?? 0).toFixed(2);
+      $('mKept').textContent = (met.kept_pct ?? 0).toFixed(0) + '%';
+      $('mLat').textContent = ((performance.now() - t0)/1000 + CHUNK_MS/1000).toFixed(1) + 's';
+    } catch (e) {
+      $('liveStatus').textContent = 'erro no bloco: ' + e.message + ' (continuo tentando)';
+    }
+  };
+  recorder.start();
+  setTimeout(() => { if (recorder.state !== 'inactive') recorder.stop(); }, CHUNK_MS);
+}
+
+// ---------- espectro do que está saindo ----------
+function drawSpec(){
+  if (!live) return;
+  const cv = $('spec'); const r = cv.getBoundingClientRect();
+  cv.width = r.width*devicePixelRatio; cv.height = r.height*devicePixelRatio;
+  const ctx = cv.getContext('2d');
+  const buf = new Uint8Array(analyser.frequencyBinCount);
+  analyser.getByteFrequencyData(buf);
+  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.fillStyle = css('--nivel');
+  const n = 72, bw = cv.width/n, maxBin = Math.floor(buf.length*0.35);
+  for (let i=0;i<n;i++){
+    let acc=0; const a=Math.floor(i*maxBin/n), b=Math.max(a+1,Math.floor((i+1)*maxBin/n));
+    for(let j=a;j<b;j++) acc+=buf[j];
+    const h=(acc/(b-a))/255*cv.height;
+    ctx.beginPath(); ctx.roundRect(i*bw+1, cv.height-h, Math.max(1,bw-2), h, 3); ctx.fill();
+  }
+  requestAnimationFrame(drawSpec);
+}
+</script>
+</body>
+</html>

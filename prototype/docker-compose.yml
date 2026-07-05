@@ -1,0 +1,12 @@
+services:
+  anti-ruido:
+    build: .
+    image: anti-ruido:dev
+    devices:
+      - /dev/snd:/dev/snd
+    # Sem argumentos roda a demo completa (sintetiza áudio + separa + métricas):
+    #   docker compose run --rm anti-ruido
+    # Outros comandos:
+    #   docker compose run --rm anti-ruido profile /data/minha-voz.wav -o /data/perfil.json
+    #   docker compose run --rm anti-ruido separate /data/bar.wav -p /data/perfil.json -o /data/limpo.wav -t 0.5 -g 0.85
+    #   docker compose run --rm anti-ruido live -p /data/perfil.json -o /data/live.wav

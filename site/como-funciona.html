@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Como funciona — Anti-Ruído</title>
+  <meta name="description" content="Como um fone consegue cancelar todo o ruído do ambiente e preservar apenas a voz que você escolher: anti-ruído adaptativo + separação de voz-alvo por IA." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%A7%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+
+<header class="wrap">
+  <nav class="nav" aria-label="Principal">
+    <a class="brand" href="./">anti-<em>ruído</em></a>
+    <div class="nav-links">
+      <a href="./">Início</a>
+      <a href="demo.html">Demo</a>
+      <a href="como-funciona.html" aria-current="page">Como funciona</a>
+      <a class="btn small" href="https://forms.gle/3UcKsLHLppjGMw7M8" target="_blank" rel="noopener">Tenho interesse</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <div class="wrap hero" style="padding-bottom: 1rem;">
+    <p class="eyebrow">Como funciona</p>
+    <h1>Três camadas entre você e <em>o caos</em>.</h1>
+    <p class="lede">O Anti-Ruído combina três tecnologias que já existem separadamente — e que ninguém juntou num fone para o dia a dia.</p>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="steps">
+        <div class="step">
+          <span class="n">1</span>
+          <div>
+            <h3>O fone escuta o ambiente</h3>
+            <p>Um conjunto de microfones mapeia continuamente o som ao redor: o grave da música, o agudo dos talheres, o murmúrio das outras mesas. É o mesmo princípio do cancelamento ativo (ANC) que já existe nos bons fones de hoje — <strong>essa parte é tecnologia madura</strong>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="n">2</span>
+          <div>
+            <h3>Gera o anti-ruído sob medida</h3>
+            <p>Em vez de um cancelamento genérico, o fone produz uma máscara sonora <strong>adaptada ao perfil do ambiente naquele momento</strong> — combinando ondas de cancelamento com ruído branco calibrado. O resultado: o fundo desaparece de forma estável, sem aquele "vácuo" desconfortável do ANC tradicional.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="n">3</span>
+          <div>
+            <h3>Separa a voz que você escolheu</h3>
+            <p>Aqui está o diferencial. Com poucos segundos de amostra, a IA aprende a "assinatura" da voz da pessoa — e passa a <strong>separá-la de todo o resto</strong>, entregando essa voz limpa no seu ouvido enquanto o mundo continua cancelado. É a técnica que a pesquisa chama de <em>target speaker extraction</em>: a máquina fazendo o que o seu cérebro tenta fazer numa festa, só que sem se cansar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow prose">
+      <h2>Isso é ficção científica?</h2>
+      <p>Não — é engenharia difícil, mas com caminho comprovado:</p>
+      <p><strong>Em software, já funciona.</strong> Apps como o Krisp isolam uma única voz entre várias em chamadas de vídeo, hoje, rodando no seu computador.</p>
+      <p><strong>Em pesquisa, já roda em tempo real.</strong> O projeto <em>Semantic Hearing</em> (Universidade de Washington, 2023) demonstrou fones que escolhem quais sons manter ou apagar — incluindo fala — processando em 6,56 milissegundos, com código aberto.</p>
+      <p><strong>Nos chips, está chegando.</strong> A geração atual de chips de áudio (como o Qualcomm Snapdragon S7) já traz processador de IA dedicado dentro do próprio fone.</p>
+      <p>O desafio do Anti-Ruído é juntar as três coisas num produto que caiba no bolso e na bateria — e é exatamente isso que queremos validar antes de construir.</p>
+
+      <div class="honest">
+        <strong>Transparência total:</strong> o Anti-Ruído ainda não existe como produto. Estamos na fase de validação — medindo se pessoas reais querem isso o suficiente antes de investir em protótipo e fabricação. É por isso que sua resposta no formulário importa de verdade.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <h2>Perguntas diretas, respostas diretas</h2>
+      <div class="faq">
+        <details>
+          <summary>Quanto vai custar?</summary>
+          <p>A faixa que estudamos é a de fones premium — entre o AirPods Pro e o Bose/Sony topo de linha. O preço final depende da validação: é uma das coisas que perguntamos no formulário.</p>
+        </details>
+        <details>
+          <summary>A pessoa precisa autorizar? E a privacidade?</summary>
+          <p>O conceito prevê processamento local, no próprio fone/celular — a voz não sobe para nenhum servidor. E o produto amplifica uma conversa da qual você já participa presencialmente; não funciona para "escutar longe" nem gravar. Esses limites fazem parte do design desde o início.</p>
+        </details>
+        <details>
+          <summary>Funciona com música tocando no fone?</summary>
+          <p>A ideia é que sim: a voz escolhida entra "por cima" do que você estiver ouvindo, como um ducking inteligente — você não precisa pausar nada para não perder o que a pessoa disse.</p>
+        </details>
+        <details>
+          <summary>Quando lança?</summary>
+          <p>Depende desta fase. Se a validação confirmar o interesse, o próximo passo é protótipo funcional e uma pré-venda — quem responder o formulário será avisado primeiro, sem compromisso.</p>
+        </details>
+        <details>
+          <summary>Isso substitui aparelho auditivo?</summary>
+          <p>Não. O Anti-Ruído é um produto de conveniência para conversar em lugares barulhentos — não é dispositivo médico, não trata perda auditiva e não substitui avaliação profissional.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="cta-band">
+      <h2>Curtiu a ideia? Então conta pra gente.</h2>
+      <p>2 minutos. Sem cadastro, sem spam. Cada resposta é um voto para esse fone existir.</p>
+      <a class="btn" href="https://forms.gle/3UcKsLHLppjGMw7M8" target="_blank" rel="noopener">Responder o formulário de interesse</a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Anti-Ruído — projeto nascido num Startup Weekend.</span>
+    <span><a href="./">Início</a> · <a href="demo.html">Demo</a> · <a href="https://forms.gle/3UcKsLHLppjGMw7M8" target="_blank" rel="noopener">Demonstrar interesse</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
