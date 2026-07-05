@@ -16,7 +16,7 @@ $(VENV)/bin/activate:
 	$(PY) -m pip install --upgrade pip
 
 setup: $(VENV)/bin/activate
-	$(PY) -m pip install -q -r requirements.txt flask
+	$(PY) -m pip install -q -r requirements.txt flask flask-cors
 
 run:
 	$(PY) app/server.py

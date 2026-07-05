@@ -1,0 +1,24 @@
+# Ingress com HTTPS grátis via sslip.io (URL "free" sem comprar domínio: o
+# hostname já codifica o IP público da instância) + cert-manager/Let's Encrypt.
+# Troque SEU.IP.PUBLICO.AQUI pelo IP elástico da instância EC2 (ver ../aws-k3s.md).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: anti-ruido-api
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: traefik # ingress controller que já vem com o k3s
+  tls:
+    - hosts: ["anti-ruido.SEU.IP.PUBLICO.AQUI.sslip.io"]
+      secretName: anti-ruido-tls
+  rules:
+    - host: anti-ruido.SEU.IP.PUBLICO.AQUI.sslip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: anti-ruido-api
+                port: { number: 80 }

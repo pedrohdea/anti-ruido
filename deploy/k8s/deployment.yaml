@@ -1,0 +1,39 @@
+# Anti-Ruído — backend da demo, rodando em Kubernetes (k3s numa EC2, ver ../aws-k3s.md)
+# Mesma imagem do Hugging Face Space (deploy/hf-space/Dockerfile).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anti-ruido-api
+  labels:
+    app: anti-ruido-api
+spec:
+  replicas: 1 # perfil de voz é estado em disco local; não escalar horizontalmente sem storage compartilhado
+  selector:
+    matchLabels:
+      app: anti-ruido-api
+  template:
+    metadata:
+      labels:
+        app: anti-ruido-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/pedrohdea/anti-ruido-api:latest # publicar via GitHub Actions (build-and-push abaixo) ou build local + push
+          ports:
+            - containerPort: 7860
+          env:
+            - name: PORT
+              value: "7860"
+            - name: HOST
+              value: "0.0.0.0"
+          resources:
+            requests: { cpu: "250m", memory: "512Mi" }
+            limits: { cpu: "1", memory: "1Gi" }
+          readinessProbe:
+            httpGet: { path: /api/health, port: 7860 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: { path: /api/health, port: 7860 }
+            initialDelaySeconds: 15
+            periodSeconds: 20
