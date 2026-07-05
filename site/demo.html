@@ -7,7 +7,7 @@
   <meta name="description" content="Experimente o Anti-Ruído agora: ouça uma cena real filtrada, ou grave sua voz e teste ao vivo no navegador." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%A7%3C/text%3E%3C/svg%3E" />
   <style>
@@ -42,6 +42,8 @@
 </head>
 <body>
 
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
 <header class="wrap">
   <nav class="nav" aria-label="Principal">
     <a class="brand" href="./">anti-<em>ruído</em></a>
@@ -54,7 +56,7 @@
   </nav>
 </header>
 
-<main>
+<main id="conteudo">
   <div class="wrap hero" style="padding-bottom:1rem">
     <p class="eyebrow">Demo ao vivo · no seu navegador</p>
     <h1>Ouça o <em>antes e depois</em>, ou teste com a sua voz.</h1>
@@ -139,17 +141,53 @@
 </main>
 
 <footer>
-  <div class="wrap">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="./">anti-<em>ruído</em></a>
+      <p>Uma empresa feita na <a href="https://www.instagram.com/swcaxiasdosul/" target="_blank" rel="noopener">Startup Weekend de Caxias do Sul</a>.</p>
+    </div>
+    <div class="footer-col">
+      <h6>Navegar</h6>
+      <p><a href="./">Início</a></p>
+      <p><a href="como-funciona.html">Como funciona</a></p>
+      <p><a href="./#contato">Contato</a></p>
+    </div>
+    <div class="footer-col">
+      <h6>Contato</h6>
+      <p><a href="tel:+5554991709966">(54) 99170-9966</a></p>
+      <p><a href="mailto:social.budsz@gmail.com">social.budsz@gmail.com</a></p>
+      <p><a href="https://instagram.com/social.budsz" target="_blank" rel="noopener">@social.budsz</a></p>
+    </div>
+    <div class="footer-col">
+      <h6>Endereço</h6>
+      <p>R. São Vicente, 785 — Cinquentenário<br>Farroupilha – RS, 95174-274</p>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
     <span>© 2026 Anti-Ruído — projeto nascido num Startup Weekend.</span>
-    <span><a href="./">Início</a> · <a href="como-funciona.html">Como funciona</a></span>
+    <nav class="legal-links" aria-label="Links legais">
+      <a href="privacidade.html">política de privacidade</a>
+      <span>|</span>
+      <a href="termos.html">termos de uso</a>
+      <span>|</span>
+      <button type="button" data-open-cookies>gerenciar cookies</button>
+    </nav>
   </div>
 </footer>
+
+<dialog id="cookieDialog">
+  <h3>Cookies neste site</h3>
+  <p>O Anti-Ruído não usa cookies de rastreamento ou analytics de terceiros. Usamos apenas o essencial para o site funcionar, sem coleta de dados pessoais além do que você envia no formulário de interesse.</p>
+  <button class="btn small" type="button" data-close-cookies>Entendi</button>
+</dialog>
+
+<script src="footer.js" defer></script>
 
 <script>
 // ----- Config: URL da API do backend (Hugging Face Space) -----
 // Preenchida no deploy — enquanto vazia, a demo ao vivo/perfil fica desabilitada
 // e só a seção 1 (cena pré-gravada) funciona.
-const API_BASE = "__API_BASE__";
+const API_BASE = "https://azzump-anti-ruido.hf.space";
 
 const $ = id => document.getElementById(id);
 
