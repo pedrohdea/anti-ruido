@@ -10,11 +10,13 @@
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%A7%3C/text%3E%3C/svg%3E" />
 </head>
 <body>
+
+<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
 <header class="wrap">
   <nav class="nav" aria-label="Principal">
@@ -28,7 +30,7 @@
   </nav>
 </header>
 
-<main>
+<main id="conteudo">
   <div class="wrap hero">
     <p class="eyebrow">Fone com seleção de voz · projeto em validação</p>
     <h1>Cancele o mundo. <em>Menos a voz</em> de quem importa.</h1>
@@ -98,6 +100,24 @@
   </section>
 
   <div class="wrap">
+    <div class="contact-band" id="contato">
+      <div>
+        <h2>Prefere falar com a gente?</h2>
+        <p>Conta sua ideia, tira dúvida ou já deixa reservado o seu — respondemos por telefone ou WhatsApp, sem formulário.</p>
+      </div>
+      <div class="contact-actions">
+        <a class="btn whatsapp" href="https://wa.me/5554991709966?text=Ol%C3%A1!%20Vi%20o%20site%20do%20Anti-Ru%C3%ADdo%20e%20quero%20saber%20mais." target="_blank" rel="noopener">
+          <span aria-hidden="true">💬</span> Chamar no WhatsApp
+        </a>
+        <a class="btn call" href="tel:+5554991709966">
+          <span aria-hidden="true">☎</span> Ligar: (54) 99170-9966
+        </a>
+        <span class="contact-note">Startup Weekend Caxias do Sul · seg-sex, horário comercial</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
     <div class="cta-band" id="interesse">
       <h2>Você usaria um fone assim?</h2>
       <p>O Anti-Ruído está em fase de validação. Sua resposta — leva 2 minutos — decide se esse produto vai existir.</p>
@@ -107,11 +127,48 @@
 </main>
 
 <footer>
-  <div class="wrap">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="./">anti-<em>ruído</em></a>
+      <p>Uma empresa feita na <a href="https://www.instagram.com/swcaxiasdosul/" target="_blank" rel="noopener">Startup Weekend de Caxias do Sul</a>.</p>
+    </div>
+    <div class="footer-col">
+      <h6>Navegar</h6>
+      <p><a href="./">Início</a></p>
+      <p><a href="como-funciona.html">Como funciona</a></p>
+      <p><a href="demo.html">Demo</a></p>
+      <p><a href="#contato">Contato</a></p>
+    </div>
+    <div class="footer-col">
+      <h6>Contato</h6>
+      <p><a href="tel:+5554991709966">(54) 99170-9966</a></p>
+      <p><a href="mailto:social.budsz@gmail.com">social.budsz@gmail.com</a></p>
+      <p><a href="https://instagram.com/social.budsz" target="_blank" rel="noopener">@social.budsz</a></p>
+    </div>
+    <div class="footer-col">
+      <h6>Endereço</h6>
+      <p>R. São Vicente, 785 — Cinquentenário<br>Farroupilha – RS, 95174-274</p>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
     <span>© 2026 Anti-Ruído — projeto nascido num Startup Weekend.</span>
-    <span><a href="como-funciona.html">Como funciona</a> · <a href="demo.html">Demo</a> · <a href="https://forms.gle/3UcKsLHLppjGMw7M8" target="_blank" rel="noopener">Demonstrar interesse</a></span>
+    <nav class="legal-links" aria-label="Links legais">
+      <a href="privacidade.html">política de privacidade</a>
+      <span>|</span>
+      <a href="termos.html">termos de uso</a>
+      <span>|</span>
+      <button type="button" data-open-cookies>gerenciar cookies</button>
+    </nav>
   </div>
 </footer>
+
+<dialog id="cookieDialog">
+  <h3>Cookies neste site</h3>
+  <p>O Anti-Ruído não usa cookies de rastreamento ou analytics de terceiros. Usamos apenas o essencial para o site funcionar, sem coleta de dados pessoais além do que você envia no formulário de interesse.</p>
+  <button class="btn small" type="button" data-close-cookies>Entendi</button>
+</dialog>
+
+<script src="footer.js" defer></script>
 
 <script>
 (function () {
