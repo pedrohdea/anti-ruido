@@ -1,0 +1,48 @@
+Plano aprovado
+# Plano: Aba Demo no site + backend Flask hospedado (HF Spaces) + Kubernetes preparado
+
+## Contexto
+
+O site estático do Anti-Ruído está no ar via Cloudflare (integração Git) e o protótipo Flask roda localmente com `make`. O usuário quer "mesclar o Flask dentro do site": uma **aba Demo** pública onde o visitante experimenta o filtro — incluindo **modo ao vivo** — sem instalar nada. O pedido original era Kubernetes free na AWS; verificado que EKS não tem free tier e que nenhum serviço com MCP no registro roda nosso stack de áudio. Decisão do usuário (via perguntas): backend no **Hugging Face Spaces via Docker** (grátis permanente, 16GB RAM, URL HTTPS `*.hf.space`, deploy feito desta sessão via git com token do usuário), mantendo **manifests Kubernetes prontos** para migrar para AWS quando os créditos de conta nova forem ativados.
+
+## Arquitetura
+
+```
+Visitante ── site estático (Cloudflare, já existe)
+               └── site/demo.html  ──fetch/CORS──▶  Flask API (HF Spaces, Docker, porta 7860)
+                                                      └── mesmo código de prototype/app/server.py
+deploy/k8s/ (Deployment+Service+Ingress) + guia k3s-na-EC2 → caminho AWS futuro
+```
+
+## Mudanças
+
+1. **`site/demo.html` (novo) + nav dos 2 HTMLs existentes** — aba Demo com:
+   - Demo guiada sem microfone: cena pronta antes/depois (copiar `cena-trecho.mp3` e `cena-trecho-filtrada.mp3` do scratchpad para `site/audio/`)
+   - Gravar perfil (10s) → POST `/api/profile`
+   - **Modo ao vivo** (escolha do usuário): blocos ~1s como no app local, com aviso de latência 2-4s pela internet e de usar fones
+   - Termômetro 1-256 + ajustes finos (reusar a lógica de `prototype/app/static/index.html`)
+   - `API_BASE` constante (URL do Space) + health-check no load: API fora do ar → aba degrada para só a demo guiada, com aviso
+2. **`prototype/app/server.py`** — adicionar `flask-cors` (origens: `*.workers.dev`, `*.pages.dev`, `*.hf.space`, `localhost`), rota `GET /api/health`, porta via env `PORT` (Spaces usa 7860).
+3. **`deploy/hf-space/`** — `Dockerfile` (python-slim + ffmpeg + gunicorn, porta 7860, roda `app/server.py` via gunicorn), `README.md` com o front-matter exigido pelo Space (`sdk: docker`, `app_port: 7860`), e `deploy-hf.sh` (cria o Space com `huggingface_hub` e faz git push usando `HF_TOKEN`).
+4. **`deploy/k8s/`** — `deployment.yaml`, `service.yaml`, `ingress.yaml` (imagem do mesmo Dockerfile) + `deploy/aws-k3s.md`: passo a passo EC2 (créditos de conta nova) → k3s → ingress + HTTPS via sslip.io/Let's Encrypt. Cumpre o objetivo "Kubernetes na AWS" de forma executável, sem custo agora.
+5. **Testes** — em `prototype/tests/test_app.py`: `/api/health`, cabeçalhos CORS presentes.
+6. **README(s)** — seção Demo pública: URL do Space, como fazer redeploy, aviso sobre sleep de 48h.
+
+## Fluxo de deploy (nesta sessão)
+
+1. Usuário cria conta no huggingface.co e um **token de escrita** (Settings → Access Tokens) e cola aqui (revogável depois).
+2. Eu: `pip install huggingface_hub` → criar Space `anti-ruido` (sdk docker) → git push do conteúdo `deploy/hf-space/` + código do app → acompanhar build → `curl https://<user>-anti-ruido.hf.space/api/health`.
+3. Gravar a URL real em `site/demo.html` → commit/push → Cloudflare redeploya o site com a aba Demo apontando para o Space.
+
+## Verificação
+
+- `make test` (suíte de 39+ testes, incluindo os novos de health/CORS)
+- Servidor local: `curl -H "Origin: https://anti-ruido.pages.dev" localhost:8686/api/health` → verificar `Access-Control-Allow-Origin`
+- Space no ar: `curl /api/health` + POST de um bloco de 1s em `/api/filter?thermo=128` medindo tempo
+- Página: screenshot via Chromium da aba Demo (desktop+mobile); demo guiada funciona sem API; live mode exige microfone real — teste manual do usuário
+- Commit/push → PR #1 (site redeploya sozinho)
+
+## Fora de escopo (registrado)
+
+- Subir o k8s na AWS agora (sem credenciais/créditos ativados); os manifests + guia deixam pronto.
+- Streaming WebRTC/latência baixa — o live por blocos é limitação assumida do protótipo.
