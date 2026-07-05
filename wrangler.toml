@@ -1,0 +1,10 @@
+# Configuração de deploy do site estático no Cloudflare (Workers Builds).
+# A integração Git roda `npx wrangler deploy`, que lê este arquivo e publica
+# o conteúdo de site/ como um Worker somente-assets (sem código de servidor).
+
+name = "anti-ruido"
+compatibility_date = "2026-07-04"
+
+[assets]
+directory = "./site"
+html_handling = "auto-trailing-slash"
