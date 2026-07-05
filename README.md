@@ -5,6 +5,7 @@ Fone de ouvido B2C que identifica o ambiente ao redor, gera ruído branco adapta
 Projeto em desenvolvimento no Startup Weekend. Este repositório está, por enquanto, focado em **validação de negócio** (não há ainda implementação técnica da solução).
 
 - Documento vivo de validação (metodologias de startup, Lean Canvas, concorrência, SWOT, mercado, riscos etc.): [`docs/business-validation.md`](docs/business-validation.md)
+- Planilha de métricas de startup (CAC, LTV, churn, runway, k-factor etc. + detecção de Inflection/Tipping/Turning Point): [`docs/planilha-metricas-startup.xlsx`](docs/planilha-metricas-startup.xlsx) (abrir no Google Sheets ou Excel)
 - Site estático de divulgação e captação de interesse: [`site/`](site/) (landing page + explicação do produto + formulário de interesse)
 - Protótipo de separação de fala com perfil de voz (timbre/pitch/intensidade) e ajustes de gradiente/tolerância: [`prototype/`](prototype/) — liga com um comando via Docker (`cd prototype && docker compose run --rm anti-ruido`)
 
