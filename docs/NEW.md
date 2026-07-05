@@ -28,11 +28,12 @@ Fone Blutoth com microfone integrado e bateria. Discreto.
 Software embarcado dentro do fone. E aplicativo celular para configurações e ajustes.
 Fone de ouvido funciona offline.
 
-## Mercado: comprantes
+## Mercado: Tamanho total de mercado: 
 Pessoas: com hipersensibilidade auditiva (10% - 40% do brasil Jornal da USP)
-Professores: 3 a cada 4 (1,4 Milhoes Fundamental. 600mil educação infantil. INEP GOV )
-Vendedores do varejo: 5 de 5 (3 Milhões. SEBRAE)
-Trabalhadores de escritório 1 de 3
+Professores: 3 a cada 4 (1,4 Milhoes Fundamental. 600mil educação infantil. INEP GOV ) = 1,5 Milhões
+Vendedores do varejo: 5 de 5 (3 Milhões. SEBRAE) = 3 Milhões
+Trabalhadores de escritório 1 de 3 (1,5 Milhão UOL economia) = 0,5 Milhões
+
 
 Você usaria?
 17/19 pessoas
@@ -106,3 +107,5 @@ DOR
 VONTADE
 ANSIA
 MORTE
+
+FONES COM CANCELAMENTO QUANDO FALA

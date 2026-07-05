@@ -88,7 +88,7 @@ def extract_profile(wav_path: str | Path, sr: int | None = 22050) -> VoiceProfil
 
     # Considera só os trechos com energia (descarta silêncio da amostra),
     # para o perfil não ser contaminado pelas pausas.
-    intervals = librosa.effects.split(y, top_db=35)
+    intervals = librosa.effects.split(y, top_db=35) # TODO, pode ser varivel/configuravel pelo usuário
     logger.info("Found %s voiced intervals", len(intervals))
     voiced = np.concatenate([y[a:b] for a, b in intervals]) if len(intervals) else y
     logger.info("Voiced audio total samples=%s duration=%.2fs", len(voiced), len(voiced) / sr)
@@ -99,8 +99,8 @@ def extract_profile(wav_path: str | Path, sr: int | None = 22050) -> VoiceProfil
     logger.info("Extracting pitch with pyin (fmin=%.1f Hz fmax=%.1f Hz)", fmin, fmax)
     f0, _, _ = librosa.pyin(
         voiced,
-        fmin=fmin,   # ~65 Hz — voz masculina grave
-        fmax=fmax,   # ~1 kHz — margem p/ voz aguda
+        fmin=fmin,   # ~65 Hz — voz masculina grave # TODO: Isso não pdoe ser fixo. Use um default, mas adicione na aba de mais configurações.
+        fmax=fmax,   # ~1 kHz — margem p/ voz aguda # TODO: Isso não pdoe ser fixo. Use um default, mas adicione na aba de mais configurações.
         sr=sr,
         frame_length=N_FFT * 2,
         hop_length=HOP,
